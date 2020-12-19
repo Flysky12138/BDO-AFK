@@ -416,7 +416,7 @@ void SetStyle()
 		GetWindowLongPtrA(exeWhnd, GWL_STYLE) & ~WS_SIZEBOX & ~WS_MAXIMIZEBOX);
 	ShowWindow(exeWhnd, SW_SHOWMINIMIZED);
 }
-//获取坐标并复制到剪切板
+//str复制到剪切板
 void ClipBoard(char* str)
 {
 	HWND hWnd = NULL;
@@ -429,9 +429,9 @@ void ClipBoard(char* str)
 	GlobalUnlock(hHandle);
 	CloseClipboard();
 }
+//快捷键获取坐标，输出显示，复制到剪切板
 void GetPosition()
 {
-	bool first = true;
 	int hotkey = 1000;
 	RegisterHotKey(NULL, hotkey, MOD_ALT, QuickKey);
 	MSG msg = { 0 };
@@ -439,20 +439,17 @@ void GetPosition()
 	{
 		if (msg.wParam == hotkey)
 		{
-			if (first)
-			{
-				system("cls");
-				first = false;
-			}
 			POINT p;
 			GetCursorPos(&p);
 			string str = to_string(p.x) + "," + to_string(p.y);
 			char* position = (char*)str.c_str();
+			system("cls");
 			cout << position << endl;
 			ClipBoard(position);
 		}
 	}
 }
+//快捷键获取鼠标坐标
 void GetPosition(int& x, int& y)
 {
 	int hotkey = 1000;
@@ -504,6 +501,30 @@ void ScreenShot()
 	strFileName += _T("BDO.bmp");
 	m_MyImage.Save(strFileName, ImageFormatPNG);
 	m_MyImage.ReleaseDC();
+}
+//快捷键获取坐标RGB颜色，输出显示，复制到剪切板
+void GetXyColor()
+{
+	int x = 0, y = 0;
+	GetPosition(x, y);
+	ScreenShot();
+	ULONG_PTR gdiplusToken;
+	GdiplusStartupInput gdiplusStartupInput;
+	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.bmp";
+	Bitmap* image = new Bitmap(Getwstring(imgPath).c_str());
+	Color color1, color2;
+	image->GetPixel(x, y, &color1);
+	image->GetPixel(x + 1, y + 1, &color2);
+	string colorStr;
+	colorStr = "color(" + to_string(color1.GetRed()) + "," + to_string(color1.GetGreen()) + "," + to_string(color1.GetBlue()) + ")(";
+	colorStr = colorStr + to_string(color2.GetRed()) + "," + to_string(color2.GetGreen()) + "," + to_string(color2.GetBlue()) + ")";
+	delete image;
+	GdiplusShutdown(gdiplusToken);
+	char* str = (char*)colorStr.c_str();
+	system("cls");
+	cout << str << endl;
+	ClipBoard(str);
 }
 //根据颜色找到匹配的第一个坐标
 void getColorXY(int red1, int green1, int blue1, int red2, int green2, int blue2, int& x, int& y)
@@ -706,9 +727,28 @@ int main(int argc, char* argv[])
 	case 1:
 		SetStyle();
 		SetTitle(Title);
+		CoutColor(111);
+		cout << "\u9009\u62e9\u6267\u884c\u9879\u76ee\uff1a" << endl;
 		CoutColor(100);
-		cout << "ALT + ` \u83b7\u53d6\u5750\u6807\u4f4d\u7f6e\u5230\u526a\u5207\u677f " << endl;
-		GetPosition();
+		cout << "\u0061\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807" << endl;
+		cout << "\u0062\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807\u5904\u989c\u8272" << endl;
+		CoutColor(111);
+		cout << "\u8f93\u5165\uff1a";
+		char ch;
+		ch = getchar();
+		system("cls");
+		cout << "\u5feb\u6377\u952e\u0020\u005b\u0020\u0041\u004c\u0054\u0020\u002b\u0020\u0060\u0020\u005d" << endl;
+		switch (ch)
+		{
+		case 'A':
+			GetPosition();
+			break;
+		default:
+			while (true)
+			{
+				GetXyColor();
+			}
+		}
 		break;
 	case 2:
 		SetStyle();
