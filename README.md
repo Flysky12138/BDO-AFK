@@ -49,13 +49,13 @@ K2 ALT Q 50 800
 L <keyUp_delay(ms)> [wait(ms)]
 L 50 800
 
-L <x,y>/<color(r,g,b)(ltx,lty;rbx,rby)> [wait(ms)]
+L <x,y>/<color(r,g,b)(r,g,b)> [wait(ms)]
 L 0,0 800
 ```
 
 ```
 <x,y>           =>  0,0 / x,y
-<color(r,g,b)(ltx,lty;rbx,rby)>  =>  color(255,255,255)(1465,319;1888,742)
+<color(r,g,b)(r,g,b)>  =>  color(255,255,255)(1465,319;1888,742)
 ```
 
 5. 鼠标右击
@@ -64,21 +64,21 @@ L 0,0 800
 R <keyUp_delay(ms)> [wait(ms)]
 R 50 800
 
-R <x,y>/<color(r,g,b)(ltx,lty;rbx,rby)> [wait(ms)]
+R <x,y>/<color(r,g,b)(r,g,b)> [wait(ms)]
 R 0,0 800
 ```
 
 6. 鼠标滚轮
 
 ```
-W <x,y>/<color(r,g,b)(ltx,lty;rbx,rby)> <downMove_times> [wait(ms)]
+W <x,y>/<color(r,g,b)(r,g,b)> <downMove_times> [wait(ms)]
 W 0,0 3 800
 ```
 
 7. 鼠标左击拖动
 
 ```
-M <x,y>/<color(r,g,b)(ltx,lty;rbx,rby)> <x,y>/<color(r,g,b)(ltx,lty;rbx,rby)> [wait(ms)]
+M <x,y>/<color(r,g,b)(r,g,b)> <x,y>/<color(r,g,b)(r,g,b)> [wait(ms)]
 M 0,0 100,100 800
 ```
 
