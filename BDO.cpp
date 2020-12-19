@@ -1,12 +1,13 @@
-﻿#include <fstream>
+﻿#include <algorithm>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <thread>
-#include <shlobj.h>
 #include <atlimage.h>
+#include <gdiplus.h>
+#include <shlobj.h>
 #include <windows.h>
-#include <GdiPlus.h>
 #pragma comment(lib, "Gdiplus.lib")
 #pragma warning(disable : 4996)
 
@@ -420,7 +421,7 @@ string GetDocumentsPath()
 	}
 	return string(szDir);
 }
-//游戏全屏截取保存为BMP
+//游戏全屏截取保存为BDO.bmp
 void ScreenShot()
 {
 	HDC hDCScreen = GetDC(NULL);
@@ -439,18 +440,18 @@ void ScreenShot()
 	m_MyImage.ReleaseDC();
 }
 //根据颜色找到匹配的第一个坐标
-void getColorXY(int red, int green, int blue, int& x, int& y) {
+void getColorXY(int red, int green, int blue, int ltx, int lty, int rbx, int rby, int& x, int& y) {
 	ULONG_PTR gdiplusToken;
 	GdiplusStartupInput gdiplusStartupInput;
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.bmp";
 	Bitmap* image = new Bitmap(Getwstring(imgPath).c_str());
-	int width = image->GetWidth();
-	int height = image->GetHeight();
+	/*int width = image->GetWidth();
+	int height = image->GetHeight();*/
 	Color color;
-	for (int i = 0; i < width; i++)
+	for (int i = ltx; i < rbx; i++)
 	{
-		for (int j = 0; j < height; j++)
+		for (int j = lty; j < rby; j++)
 		{
 			image->GetPixel(i, j, &color);
 			if (red == color.GetRed()) {
@@ -481,15 +482,29 @@ void GetXY(string& str, int& x, int& y)
 	else if (str.substr(0, 5) == "color")
 	{
 		ScreenShot();
-		string rgb;
 		int R = 0, G = 0, B = 0;
-		rgb = str.substr(str.find("(") + 1, str.find_last_of(")") - 6); //r,g,b
-		R = Getint(rgb.substr(0, rgb.find(",")));
-		rgb = rgb.substr(rgb.find(",") + 1); //g,b
-		G = Getint(rgb.substr(0, rgb.find(",")));
-		rgb = rgb.substr(rgb.find(",") + 1); //b
-		B = Getint(rgb);
-		getColorXY(R, G, B, x, y);
+		int ltx = 0, lty = 0, rbx = 0, rby = 0;
+		{
+			string rgb;
+			rgb = str.substr(str.find("(") + 1, str.find(")") - 6); //r,g,b
+			R = Getint(rgb.substr(0, rgb.find(",")));
+			rgb = rgb.substr(rgb.find(",") + 1); //g,b
+			G = Getint(rgb.substr(0, rgb.find(",")));
+			rgb = rgb.substr(rgb.find(",") + 1); //b
+			B = Getint(rgb);
+		}
+		{
+			string  position;
+			position = str.substr(str.find(")(") + 2, str.find_last_of(")") - 17); //ltx,lty;rbx,rby
+			ltx = Getint(position.substr(0, position.find(",")));
+			position = position.substr(position.find(",") + 1); //lty;rbx,rby
+			lty = Getint(position.substr(0, position.find(";")));
+			position = position.substr(position.find(";") + 1); //rbx,rby
+			rbx = Getint(position.substr(0, position.find(",")));
+			position = position.substr(position.find(",") + 1); //rby
+			rby = Getint(position);
+		}
+		getColorXY(R, G, B, ltx, lty, rbx, rby, x, y);
 	}
 	//0,0
 	else

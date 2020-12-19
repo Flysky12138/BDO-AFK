@@ -49,13 +49,13 @@ K2 ALT Q 50 800
 L <keyUp_delay(ms)> [wait(ms)]
 L 50 800
 
-L <x,y>/<color(r,g,b)> [wait(ms)]
+L <x,y>/<color(r,g,b)(ltx,lty;rbx,rby)> [wait(ms)]
 L 0,0 800
 ```
 
 ```
 <x,y>           =>  0,0 / x,y
-<color(r,g,b)>  =>  color(255,255,255)
+<color(r,g,b)(ltx,lty;rbx,rby)>  =>  color(255,255,255)
 ```
 
 5. 鼠标右击
@@ -64,21 +64,21 @@ L 0,0 800
 R <keyUp_delay(ms)> [wait(ms)]
 R 50 800
 
-R <x,y>/<color(r,g,b)> [wait(ms)]
+R <x,y>/<color(r,g,b)(ltx,lty;rbx,rby)> [wait(ms)]
 R 0,0 800
 ```
 
 6. 鼠标滚轮
 
 ```
-W <x,y>/<color(r,g,b)> <downMove_times> [wait(ms)]
+W <x,y>/<color(r,g,b)(ltx,lty;rbx,rby)> <downMove_times> [wait(ms)]
 W 0,0 3 800
 ```
 
 7. 鼠标左击拖动
 
 ```
-M <x,y>/<color(r,g,b)> <x,y>/<color(r,g,b)> [wait(ms)]
+M <x,y>/<color(r,g,b)(ltx,lty;rbx,rby)> <x,y>/<color(r,g,b)(ltx,lty;rbx,rby)> [wait(ms)]
 M 0,0 100,100 800
 ```
 
@@ -97,7 +97,7 @@ S 500
 -   `key1`：可填按键 `0-9`（当且仅当选择物品数量时才用此命令）
 -   `keyUp_delay(ms)`：按键按下到抬起之间的时间
 -   `x,y`：可以填写坐标如 `100,200`，也可以直接填写 `x,y`。当填写 `x,y` 时，程序第一次运行到这行代码时，你需要按快捷键 `` ALT+` `` 获取坐标，之后的运行就自动使用这次得到的坐标
--   `color(r,g,b)`：获取在图片 `BDO.bmp`（自动截取的图片，保存在游戏截图文件夹内）中第一个匹配到的颜色的坐标 （匹配方式：从 `0,0` 点开始竖向匹配）
+-   `color(r,g,b)(ltx,lty;rbx,rby)`：获取在图片 `BDO.bmp`（自动截取的图片，保存在游戏截图文件夹内）中第一个匹配到的颜色的坐标 （匹配方式：从 `ltx,lty` 点开始竖向匹配到 `rbx,rby`）
 -   `downMove_times`：向下移动，以一个背包格子为单位
 
 > 单行命令最后为 `0` 时可不填写  
