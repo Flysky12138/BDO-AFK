@@ -1,6 +1,0 @@
-﻿  BDO.cpp
-E:\Game\Black Desert\BDO-AFK\BDO.cpp(54,75): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-E:\Game\Black Desert\BDO-AFK\BDO.cpp(56,69): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-E:\Game\Black Desert\BDO-AFK\BDO.cpp(75): warning C4715: “GetCodeNum”: 不是所有的控件路径都返回值
-E:\Game\Black Desert\BDO-AFK\BDO.cpp(89): warning C4715: “GetCodeStr”: 不是所有的控件路径都返回值
-  BDO.vcxproj -> E:\Game\Black Desert\BDO-AFK\x64\Debug\BDO.exe
