@@ -1,0 +1,5 @@
+C:\Users\27972\Desktop\VS\BDO\x64\Release\BDO.exe
+E:\游戏\黑色沙漠\脚本\BDO\x64\Release\BDO.exe
+E:\游戏\黑色沙漠\脚本\x64\Release\BDO.exe
+E:\Game\黑色沙漠\脚本\x64\Release\BDO.exe
+E:\Game\Black Desert\BDO-AFK\x64\Release\BDO.exe

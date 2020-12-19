@@ -1,0 +1,2 @@
+E:\Game\Black Desert\BDO-AFK\x64\Debug\BDO.exe
+E:\Game\Black Desert\BDO-AFK\x64\Debug\BDO.pdb
