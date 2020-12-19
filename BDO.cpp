@@ -114,7 +114,7 @@ wstring Getwstring(string str)
 {
 	std::string temp = str;
 	int len = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)temp.c_str(), -1, NULL, 0);
-	wchar_t *wszUtf8 = new wchar_t[len + 1];
+	wchar_t* wszUtf8 = new wchar_t[len + 1];
 	memset(wszUtf8, 0, len * 2 + 2);
 	MultiByteToWideChar(CP_ACP, 0, (LPCSTR)temp.c_str(), -1, (LPWSTR)wszUtf8, len);
 	return wszUtf8;
@@ -181,7 +181,7 @@ void K2(int key1, int key2, int delay, int end)
 //移动鼠标指针
 void MoveMouse(int x, int y)
 {
-	RECT rect = {x, y, x + 1, y + 1};
+	RECT rect = { x, y, x + 1, y + 1 };
 	ClipCursor(&rect);
 	ClipCursor(NULL);
 	Sleep(50);
@@ -408,7 +408,7 @@ void SetTitle(string path)
 //设置窗口样式
 void SetStyle()
 {
-	SMALL_RECT rc = {0, 0, 30, 20};
+	SMALL_RECT rc = { 0, 0, 30, 20 };
 	SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &rc);
 	SetWindowLongPtrA(
 		exeWhnd,
@@ -417,13 +417,13 @@ void SetStyle()
 	ShowWindow(exeWhnd, SW_SHOWMINIMIZED);
 }
 //获取坐标并复制到剪切板
-void ClipBoard(char *str)
+void ClipBoard(char* str)
 {
 	HWND hWnd = NULL;
 	OpenClipboard(hWnd);
 	EmptyClipboard();
 	HANDLE hHandle = GlobalAlloc(GMEM_FIXED, 1000);
-	char *pData = (char *)GlobalLock(hHandle);
+	char* pData = (char*)GlobalLock(hHandle);
 	strcpy(pData, str);
 	SetClipboardData(CF_TEXT, hHandle);
 	GlobalUnlock(hHandle);
@@ -434,7 +434,7 @@ void GetPosition()
 	bool first = true;
 	int hotkey = 1000;
 	RegisterHotKey(NULL, hotkey, MOD_ALT, QuickKey);
-	MSG msg = {0};
+	MSG msg = { 0 };
 	while (GetMessage(&msg, NULL, 0, 0) != 0)
 	{
 		if (msg.wParam == hotkey)
@@ -447,17 +447,17 @@ void GetPosition()
 			POINT p;
 			GetCursorPos(&p);
 			string str = to_string(p.x) + "," + to_string(p.y);
-			char *position = (char *)str.c_str();
+			char* position = (char*)str.c_str();
 			cout << position << endl;
 			ClipBoard(position);
 		}
 	}
 }
-void GetPosition(int &x, int &y)
+void GetPosition(int& x, int& y)
 {
 	int hotkey = 1000;
 	RegisterHotKey(NULL, hotkey, MOD_ALT, QuickKey);
-	MSG msg = {0};
+	MSG msg = { 0 };
 	while (GetMessage(&msg, NULL, 0, 0) != 0)
 	{
 		if (msg.wParam == hotkey)
@@ -506,13 +506,13 @@ void ScreenShot()
 	m_MyImage.ReleaseDC();
 }
 //根据颜色找到匹配的第一个坐标
-void getColorXY(int red1, int green1, int blue1, int red2, int green2, int blue2, int &x, int &y)
+void getColorXY(int red1, int green1, int blue1, int red2, int green2, int blue2, int& x, int& y)
 {
 	ULONG_PTR gdiplusToken;
 	GdiplusStartupInput gdiplusStartupInput;
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.bmp";
-	Bitmap *image = new Bitmap(Getwstring(imgPath).c_str());
+	Bitmap* image = new Bitmap(Getwstring(imgPath).c_str());
 	int width = image->GetWidth();
 	int height = image->GetHeight();
 	Color color1, color2;
@@ -537,7 +537,7 @@ void getColorXY(int red1, int green1, int blue1, int red2, int green2, int blue2
 	GdiplusShutdown(gdiplusToken);
 }
 //得到坐标
-void GetXY(string &str, int &x, int &y)
+void GetXY(string& str, int& x, int& y)
 {
 	//x,y
 	if (str == "x,y")
@@ -678,7 +678,7 @@ void RunCode()
 			cout << "\u8fd0\u884c\u6b21\u6570: ";
 			CoutColor(100);
 			cout << num++ << " / " << Getint(Code[0][1]) << endl
-				 << endl;
+				<< endl;
 			CoutColor(0);
 			gameWhnd = FindWindow("BlackDesertWindowClass", NULL);
 			for (int i = 0; Code[i][0] != "\0"; i++)
@@ -699,7 +699,7 @@ void RunCode()
 	}
 }
 //主函数
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	switch (argc)
 	{
@@ -727,7 +727,7 @@ int main(int argc, char *argv[])
 		SetTitle(Title);
 		ShowWindow(exeWhnd, 1);
 		cout << "QQ: 2797299614" << endl
-			 << endl;
+			<< endl;
 	}
 	if (argc != 2)
 		system("pause");
