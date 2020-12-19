@@ -14,27 +14,91 @@
 using namespace std;
 using namespace Gdiplus;
 
-string Code[200][5];   //待运行文本
+string Code[200][5]; //待运行文本
 string KeyCode[10][2] = {
-	{"0","48"},{"1","49"},{"2","50"},{"3","51"},{"4","52"},
-	{"5","53"},{"6","54"},{"7","55"},{"8","56"},{"9","57"},
-};//虚拟键码
+	{"0", "48"},
+	{"1", "49"},
+	{"2", "50"},
+	{"3", "51"},
+	{"4", "52"},
+	{"5", "53"},
+	{"6", "54"},
+	{"7", "55"},
+	{"8", "56"},
+	{"9", "57"},
+}; //虚拟键码
 string GameKeyCode[80][2] = {
-	{"ESC","1"},{"1","2"},{"2","3"},{"3","4"},{"4","5"},
-	{"5","6"},{"6","7"},{"7","8"},{"8","9"},{"9","10"},
-	{"0","11"},{"","12"},{"","13"},{"","14"},{"TAB","15"},
-	{"Q","16"},{"W","17"},{"E","18"},{"R","19"},{"T","20"},
-	{"Y","21"},{"U","22"},{"I","23"},{"O","24"},{"P","25"},
-	{"","26"},{"","27"},{"ENTER","28"},{"CTRL","29"},{"A","30"},
-	{"S","31"},{"D","32"},{"F","33"},{"G","34"},{"H","35"},
-	{"J","36"},{"K","37"},{"L","38"},{"","39"},{"","40"},
-	{"~","41"},{"SHIFT","42"},{"","43"},{"Z","44"},{"X","45"},
-	{"C","46"},{"V","47"},{"B","48"},{"N","49"},{"M","50"},
-	{",","51"},{"","52"},{"","53"},{"","54"},{"","55"},
-	{"ALT","56"},{"SPACE","57"},{"","58"},{"F1","59"},{"F2","60"},
-	{"F3","61"},{"F4","62"},{"F5","63"},{"F6","64"},{"F7","65"},
-	{"F8","66"},{"F9","67"},{"F10","68"},{"F11","69"},{"SCRLK","70"},
-};//硬件扫描代码
+	{"ESC", "1"},
+	{"1", "2"},
+	{"2", "3"},
+	{"3", "4"},
+	{"4", "5"},
+	{"5", "6"},
+	{"6", "7"},
+	{"7", "8"},
+	{"8", "9"},
+	{"9", "10"},
+	{"0", "11"},
+	{"", "12"},
+	{"", "13"},
+	{"", "14"},
+	{"TAB", "15"},
+	{"Q", "16"},
+	{"W", "17"},
+	{"E", "18"},
+	{"R", "19"},
+	{"T", "20"},
+	{"Y", "21"},
+	{"U", "22"},
+	{"I", "23"},
+	{"O", "24"},
+	{"P", "25"},
+	{"", "26"},
+	{"", "27"},
+	{"ENTER", "28"},
+	{"CTRL", "29"},
+	{"A", "30"},
+	{"S", "31"},
+	{"D", "32"},
+	{"F", "33"},
+	{"G", "34"},
+	{"H", "35"},
+	{"J", "36"},
+	{"K", "37"},
+	{"L", "38"},
+	{"", "39"},
+	{"", "40"},
+	{"~", "41"},
+	{"SHIFT", "42"},
+	{"", "43"},
+	{"Z", "44"},
+	{"X", "45"},
+	{"C", "46"},
+	{"V", "47"},
+	{"B", "48"},
+	{"N", "49"},
+	{"M", "50"},
+	{",", "51"},
+	{"", "52"},
+	{"", "53"},
+	{"", "54"},
+	{"", "55"},
+	{"ALT", "56"},
+	{"SPACE", "57"},
+	{"", "58"},
+	{"F1", "59"},
+	{"F2", "60"},
+	{"F3", "61"},
+	{"F4", "62"},
+	{"F5", "63"},
+	{"F6", "64"},
+	{"F7", "65"},
+	{"F8", "66"},
+	{"F9", "67"},
+	{"F10", "68"},
+	{"F11", "69"},
+	{"SCRLK", "70"},
+}; //硬件扫描代码
 HWND exeWhnd = GetConsoleWindow();
 HWND gameWhnd, headWhnd;
 int QuickKey = VK_OEM_3; //	`
@@ -50,7 +114,7 @@ wstring Getwstring(string str)
 {
 	std::string temp = str;
 	int len = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)temp.c_str(), -1, NULL, 0);
-	wchar_t* wszUtf8 = new wchar_t[len + 1];
+	wchar_t *wszUtf8 = new wchar_t[len + 1];
 	memset(wszUtf8, 0, len * 2 + 2);
 	MultiByteToWideChar(CP_ACP, 0, (LPCSTR)temp.c_str(), -1, (LPWSTR)wszUtf8, len);
 	return wszUtf8;
@@ -117,7 +181,7 @@ void K2(int key1, int key2, int delay, int end)
 //移动鼠标指针
 void MoveMouse(int x, int y)
 {
-	RECT rect = { x, y, x + 1, y + 1 };
+	RECT rect = {x, y, x + 1, y + 1};
 	ClipCursor(&rect);
 	ClipCursor(NULL);
 	Sleep(50);
@@ -254,7 +318,8 @@ void ReadFiletoCode(string file)
 	}
 }
 //输出字的颜色
-void CoutColor(int tag) {
+void CoutColor(int tag)
+{
 	switch (tag)
 	{
 	case 0:
@@ -285,7 +350,8 @@ void ShowTime(int delay)
 				SetWindowPos(exeWhnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 				SetForegroundWindow(sqa);
 			}
-			if (delay == 1) ShowWindow(exeWhnd, SW_SHOWMINIMIZED);
+			if (delay == 1)
+				ShowWindow(exeWhnd, SW_SHOWMINIMIZED);
 		}
 		Sleep(1000);
 		delay--;
@@ -342,7 +408,7 @@ void SetTitle(string path)
 //设置窗口样式
 void SetStyle()
 {
-	SMALL_RECT rc = { 0, 0, 30, 20 };
+	SMALL_RECT rc = {0, 0, 30, 20};
 	SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &rc);
 	SetWindowLongPtrA(
 		exeWhnd,
@@ -351,13 +417,13 @@ void SetStyle()
 	ShowWindow(exeWhnd, SW_SHOWMINIMIZED);
 }
 //获取坐标并复制到剪切板
-void ClipBoard(char* str)
+void ClipBoard(char *str)
 {
 	HWND hWnd = NULL;
 	OpenClipboard(hWnd);
 	EmptyClipboard();
 	HANDLE hHandle = GlobalAlloc(GMEM_FIXED, 1000);
-	char* pData = (char*)GlobalLock(hHandle);
+	char *pData = (char *)GlobalLock(hHandle);
 	strcpy(pData, str);
 	SetClipboardData(CF_TEXT, hHandle);
 	GlobalUnlock(hHandle);
@@ -368,7 +434,7 @@ void GetPosition()
 	bool first = true;
 	int hotkey = 1000;
 	RegisterHotKey(NULL, hotkey, MOD_ALT, QuickKey);
-	MSG msg = { 0 };
+	MSG msg = {0};
 	while (GetMessage(&msg, NULL, 0, 0) != 0)
 	{
 		if (msg.wParam == hotkey)
@@ -381,17 +447,17 @@ void GetPosition()
 			POINT p;
 			GetCursorPos(&p);
 			string str = to_string(p.x) + "," + to_string(p.y);
-			char* position = (char*)str.c_str();
+			char *position = (char *)str.c_str();
 			cout << position << endl;
 			ClipBoard(position);
 		}
 	}
 }
-void GetPosition(int& x, int& y)
+void GetPosition(int &x, int &y)
 {
 	int hotkey = 1000;
 	RegisterHotKey(NULL, hotkey, MOD_ALT, QuickKey);
-	MSG msg = { 0 };
+	MSG msg = {0};
 	while (GetMessage(&msg, NULL, 0, 0) != 0)
 	{
 		if (msg.wParam == hotkey)
@@ -440,27 +506,29 @@ void ScreenShot()
 	m_MyImage.ReleaseDC();
 }
 //根据颜色找到匹配的第一个坐标
-void getColorXY(int red, int green, int blue, int ltx, int lty, int rbx, int rby, int& x, int& y) {
+void getColorXY(int red1, int green1, int blue1, int red2, int green2, int blue2, int &x, int &y)
+{
 	ULONG_PTR gdiplusToken;
 	GdiplusStartupInput gdiplusStartupInput;
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.bmp";
-	Bitmap* image = new Bitmap(Getwstring(imgPath).c_str());
-	/*int width = image->GetWidth();
-	int height = image->GetHeight();*/
-	Color color;
-	for (int i = ltx; i < rbx; i++)
+	Bitmap *image = new Bitmap(Getwstring(imgPath).c_str());
+	int width = image->GetWidth();
+	int height = image->GetHeight();
+	Color color1, color2;
+	for (int i = 0; i < width; i++)
 	{
-		for (int j = lty; j < rby; j++)
+		for (int j = 0; j < height; j++)
 		{
-			image->GetPixel(i, j, &color);
-			if (red == color.GetRed()) {
-				if (green == color.GetGreen()) {
-					if (blue == color.GetBlue()) {
-						x = i;
-						y = j;
-						return;
-					}
+			image->GetPixel(i, j, &color1);
+			if (red1 == color1.GetRed() && green1 == color1.GetGreen() && blue1 == color1.GetBlue())
+			{
+				image->GetPixel(i + 1, j + 1, &color2);
+				if (red2 == color2.GetRed() && green2 == color2.GetGreen() && blue2 == color2.GetBlue())
+				{
+					x = i;
+					y = j;
+					return;
 				}
 			}
 		}
@@ -469,7 +537,7 @@ void getColorXY(int red, int green, int blue, int ltx, int lty, int rbx, int rby
 	GdiplusShutdown(gdiplusToken);
 }
 //得到坐标
-void GetXY(string& str, int& x, int& y)
+void GetXY(string &str, int &x, int &y)
 {
 	//x,y
 	if (str == "x,y")
@@ -482,29 +550,27 @@ void GetXY(string& str, int& x, int& y)
 	else if (str.substr(0, 5) == "color")
 	{
 		ScreenShot();
-		int R = 0, G = 0, B = 0;
-		int ltx = 0, lty = 0, rbx = 0, rby = 0;
+		int R1 = 0, G1 = 0, B1 = 0;
+		int R2 = 0, G2 = 0, B2 = 0;
 		{
-			string rgb;
-			rgb = str.substr(str.find("(") + 1, str.find(")") - 6); //r,g,b
-			R = Getint(rgb.substr(0, rgb.find(",")));
-			rgb = rgb.substr(rgb.find(",") + 1); //g,b
-			G = Getint(rgb.substr(0, rgb.find(",")));
-			rgb = rgb.substr(rgb.find(",") + 1); //b
-			B = Getint(rgb);
+			string rgb1;
+			rgb1 = str.substr(str.find("(") + 1, str.find(")") - 6); //r,g,b
+			R1 = Getint(rgb1.substr(0, rgb1.find(",")));
+			rgb1 = rgb1.substr(rgb1.find(",") + 1); //g,b
+			G1 = Getint(rgb1.substr(0, rgb1.find(",")));
+			rgb1 = rgb1.substr(rgb1.find(",") + 1); //b
+			B1 = Getint(rgb1);
 		}
 		{
-			string  position;
-			position = str.substr(str.find(")(") + 2, str.find_last_of(")") - 17); //ltx,lty;rbx,rby
-			ltx = Getint(position.substr(0, position.find(",")));
-			position = position.substr(position.find(",") + 1); //lty;rbx,rby
-			lty = Getint(position.substr(0, position.find(";")));
-			position = position.substr(position.find(";") + 1); //rbx,rby
-			rbx = Getint(position.substr(0, position.find(",")));
-			position = position.substr(position.find(",") + 1); //rby
-			rby = Getint(position);
+			string rgb2;
+			rgb2 = str.substr(str.find(")(") + 2, str.find_last_of(")") - 16); //r,g,b
+			R2 = Getint(rgb2.substr(0, rgb2.find(",")));
+			rgb2 = rgb2.substr(rgb2.find(",") + 1); //g,b
+			G2 = Getint(rgb2.substr(0, rgb2.find(",")));
+			rgb2 = rgb2.substr(rgb2.find(",") + 1); //b
+			B2 = Getint(rgb2);
 		}
-		getColorXY(R, G, B, ltx, lty, rbx, rby, x, y);
+		getColorXY(R1, G1, B1, R2, G2, B2, x, y);
 	}
 	//0,0
 	else
@@ -533,7 +599,7 @@ void RunKey(string str[])
 		}
 		if (str[0] == "L" || str[0] == "R" || str[0] == "W")
 		{
-			int x, y;
+			int x = 0, y = 0;
 			bool Sign = false;
 			if (str[1].find(',') != string::npos || str[1].find("color") != string::npos)
 			{
@@ -555,11 +621,11 @@ void RunKey(string str[])
 		}
 		if (str[0] == "M")
 		{
-			int x1, y1, x2, y2;
+			int x1 = 0, y1 = 0;
+			int x2 = 0, y2 = 0;
 			GetXY(str[1], x1, y1);
 			GetXY(str[2], x2, y2);
 			M(x1, y1, x2, y2, Getint(str[3]));
-
 		}
 		if (str[0] == "S")
 		{
@@ -612,7 +678,7 @@ void RunCode()
 			cout << "\u8fd0\u884c\u6b21\u6570: ";
 			CoutColor(100);
 			cout << num++ << " / " << Getint(Code[0][1]) << endl
-				<< endl;
+				 << endl;
 			CoutColor(0);
 			gameWhnd = FindWindow("BlackDesertWindowClass", NULL);
 			for (int i = 0; Code[i][0] != "\0"; i++)
@@ -633,7 +699,7 @@ void RunCode()
 	}
 }
 //主函数
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	switch (argc)
 	{
@@ -651,7 +717,8 @@ int main(int argc, char* argv[])
 		Sleep(1000);
 		if (Getint(Code[0][3]))
 		{
-			thread t(SetHotKey, 0, "stop"); t.detach();
+			thread t(SetHotKey, 0, "stop");
+			t.detach();
 		}
 		RunCode();
 		break;
@@ -659,8 +726,10 @@ int main(int argc, char* argv[])
 		SetStyle();
 		SetTitle(Title);
 		ShowWindow(exeWhnd, 1);
-		cout << "QQ: 2797299614" << endl << endl;
+		cout << "QQ: 2797299614" << endl
+			 << endl;
 	}
-	if (argc != 2) system("pause");
+	if (argc != 2)
+		system("pause");
 	return 0;
 }
