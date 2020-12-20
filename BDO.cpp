@@ -512,7 +512,7 @@ void GetXyColor()
 	Bitmap *image = new Bitmap(Getwstring(imgPath).c_str());
 	Color color1, color2;
 	image->GetPixel(x, y, &color1);
-	image->GetPixel(x + 10, y + 10, &color2);
+	image->GetPixel(x + 3, y + 3, &color2);
 	string colorStr;
 	colorStr = "color(" + to_string(color1.GetRed()) + "," + to_string(color1.GetGreen()) + "," + to_string(color1.GetBlue()) + ")(";
 	colorStr = colorStr + to_string(color2.GetRed()) + "," + to_string(color2.GetGreen()) + "," + to_string(color2.GetBlue()) + ")";
@@ -540,7 +540,7 @@ void getColorXY(int red1, int green1, int blue1, int red2, int green2, int blue2
 			image->GetPixel(i, j, &color1);
 			if (red1 == color1.GetRed() && green1 == color1.GetGreen() && blue1 == color1.GetBlue())
 			{
-				image->GetPixel(i + 10, j + 10, &color2);
+				image->GetPixel(i + 3, j + 3, &color2);
 				if (red2 == color2.GetRed() && green2 == color2.GetGreen() && blue2 == color2.GetBlue())
 				{
 					x = i;
