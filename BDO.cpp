@@ -128,7 +128,6 @@ int GetCodeNum(string str, string keycode[][2])
 		if (str == keycode[i][0])
 		{
 			return Getint(keycode[i][1]);
-			break;
 		}
 		i++;
 	}
@@ -142,7 +141,6 @@ string GetCodeStr(int num, string keycode[][2])
 		if (to_string(num) == keycode[i][1])
 		{
 			return keycode[i][0];
-			break;
 		}
 		i++;
 	}
@@ -443,7 +441,6 @@ void GetPosition()
 			GetCursorPos(&p);
 			string str = to_string(p.x) + "," + to_string(p.y);
 			char *position = (char *)str.c_str();
-			system("cls");
 			cout << position << endl;
 			ClipBoard(position);
 		}
@@ -522,7 +519,6 @@ void GetXyColor()
 	delete image;
 	GdiplusShutdown(gdiplusToken);
 	char *str = (char *)colorStr.c_str();
-	system("cls");
 	cout << str << endl;
 	ClipBoard(str);
 }
@@ -732,13 +728,14 @@ int main(int argc, char *argv[])
 		CoutColor(100);
 		cout << "\u0061\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807" << endl;
 		cout << "\u0062\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807\u5904\u989c\u8272" << endl;
-		CoutColor(111);
+		CoutColor(0);
 		cout << "\u8f93\u5165\uff1a";
-		CoutColor(100);
+		CoutColor(111);
 		char ch;
 		ch = getchar();
 		system("cls");
-		cout << "\u5feb\u6377\u952e\u0020\u005b\u0020\u0041\u004c\u0054\u0020\u002b\u0020\u0060\u0020\u005d" << endl;
+		cout << "\u5feb\u6377\u952e\u0020\u005b\u0020\u0041\u004c\u0054\u0020\u002b\u0020\u0060\u0020\u005d" << endl << endl;
+		CoutColor(0);
 		switch (ch)
 		{
 		case 'A':
