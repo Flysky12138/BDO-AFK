@@ -723,23 +723,25 @@ int main(int argc, char *argv[])
 	case 1:
 		SetStyle();
 		SetTitle(Title);
+		ShowWindow(exeWhnd, 1);
 		CoutColor(111);
 		cout << "\u9009\u62e9\u6267\u884c\u9879\u76ee\uff1a" << endl;
 		CoutColor(100);
-		cout << "\u0061\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807" << endl;
-		cout << "\u0062\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807\u5904\u989c\u8272" << endl;
+		cout << "1\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807" << endl;
+		cout << "2\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807\u5904\u989c\u8272" << endl;
 		CoutColor(0);
 		cout << "\u8f93\u5165\uff1a";
 		CoutColor(111);
 		char ch;
 		ch = getchar();
+		ShowWindow(exeWhnd, SW_SHOWMINIMIZED);
 		system("cls");
 		cout << "\u5feb\u6377\u952e\u0020\u005b\u0020\u0041\u004c\u0054\u0020\u002b\u0020\u0060\u0020\u005d" << endl
 			 << endl;
 		CoutColor(0);
 		switch (ch)
 		{
-		case 'A':
+		case 49:
 			GetPosition();
 			break;
 		default:
