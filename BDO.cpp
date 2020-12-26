@@ -576,19 +576,20 @@ void GetXY(string &str, int &x, int &y)
 		str = to_string(x) + ',' + to_string(y);
 		Sleep(1000);
 	}
-	//color(255,255,255)(0,0,0)
+	//color(255,255,255)(0,0,0)(255,255,255)(0,0,0)
 	else if (str.substr(0, 5) == "color")
 	{
 		ScreenShot();
 		int colorArray[4][3];
+		string strColor = str;
 		for (int i = 0; i < 4; i++)
 		{
-			str = str.substr(str.find("(") + 1); //r,g,b)(...)
-			colorArray[i][0] = Getint(str.substr(0, str.find(",")));
-			str = str.substr(str.find(",") + 1); //g,b)(...)
-			colorArray[i][1] = Getint(str.substr(0, str.find(",")));
-			str = str.substr(str.find(",") + 1); //b)(...)
-			colorArray[i][2] = Getint(str.substr(0, str.find(")")));
+			strColor = strColor.substr(strColor.find("(") + 1); //r,g,b)(...)
+			colorArray[i][0] = Getint(strColor.substr(0, strColor.find(",")));
+			strColor = strColor.substr(strColor.find(",") + 1); //g,b)(...)
+			colorArray[i][1] = Getint(strColor.substr(0, strColor.find(",")));
+			strColor = strColor.substr(strColor.find(",") + 1); //b)(...)
+			colorArray[i][2] = Getint(strColor.substr(0, strColor.find(")")));
 		}
 		getColorXY(colorArray, x, y);
 	}
