@@ -510,20 +510,38 @@ void GetXyColor()
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.bmp";
 	Bitmap *image = new Bitmap(Getwstring(imgPath).c_str());
-	Color color1, color2;
+	Color color1, color2, color3, color4;
 	image->GetPixel(x, y, &color1);
-	image->GetPixel(x + 3, y + 3, &color2);
+	image->GetPixel(x + 3, y, &color2);
+	image->GetPixel(x + 3, y + 3, &color3);
+	image->GetPixel(x, y + 3, &color4);
 	string colorStr;
 	colorStr = "color(" + to_string(color1.GetRed()) + "," + to_string(color1.GetGreen()) + "," + to_string(color1.GetBlue()) + ")(";
-	colorStr = colorStr + to_string(color2.GetRed()) + "," + to_string(color2.GetGreen()) + "," + to_string(color2.GetBlue()) + ")";
+	colorStr = colorStr + to_string(color2.GetRed()) + "," + to_string(color2.GetGreen()) + "," + to_string(color2.GetBlue()) + ")(";
+	colorStr = colorStr + to_string(color3.GetRed()) + "," + to_string(color3.GetGreen()) + "," + to_string(color3.GetBlue()) + ")(";
+	colorStr = colorStr + to_string(color4.GetRed()) + "," + to_string(color4.GetGreen()) + "," + to_string(color4.GetBlue()) + ")";
 	delete image;
 	GdiplusShutdown(gdiplusToken);
 	char *str = (char *)colorStr.c_str();
 	cout << str << endl;
 	ClipBoard(str);
 }
+//判断某点颜色是否匹配
+bool checkColor(Bitmap *image, int array[], int i, int j)
+{
+	Color color;
+	image->GetPixel(i, j, &color);
+	if (array[0] == color.GetRed() && array[1] == color.GetGreen() && array[2] == color.GetBlue())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 //根据颜色找到匹配的第一个坐标
-void getColorXY(int red1, int green1, int blue1, int red2, int green2, int blue2, int &x, int &y)
+void getColorXY(int array[][3], int &x, int &y)
 {
 	ULONG_PTR gdiplusToken;
 	GdiplusStartupInput gdiplusStartupInput;
@@ -537,16 +555,11 @@ void getColorXY(int red1, int green1, int blue1, int red2, int green2, int blue2
 	{
 		for (int j = 0; j < height; j++)
 		{
-			image->GetPixel(i, j, &color1);
-			if (red1 == color1.GetRed() && green1 == color1.GetGreen() && blue1 == color1.GetBlue())
+			if (checkColor(image, array[0], i, j) && checkColor(image, array[1], i + 3, j) && checkColor(image, array[2], i + 3, j + 3) && checkColor(image, array[3], i, j + 3))
 			{
-				image->GetPixel(i + 3, j + 3, &color2);
-				if (red2 == color2.GetRed() && green2 == color2.GetGreen() && blue2 == color2.GetBlue())
-				{
-					x = i;
-					y = j;
-					return;
-				}
+				x = i;
+				y = j;
+				return;
 			}
 		}
 	}
@@ -563,31 +576,21 @@ void GetXY(string &str, int &x, int &y)
 		str = to_string(x) + ',' + to_string(y);
 		Sleep(1000);
 	}
-	//color(255,255,255)
+	//color(255,255,255)(0,0,0)
 	else if (str.substr(0, 5) == "color")
 	{
 		ScreenShot();
-		int R1 = 0, G1 = 0, B1 = 0;
-		int R2 = 0, G2 = 0, B2 = 0;
+		int colorArray[4][3];
+		for (int i = 0; i < 4; i++)
 		{
-			string rgb1;
-			rgb1 = str.substr(str.find("(") + 1, str.find(")") - 6); //r,g,b
-			R1 = Getint(rgb1.substr(0, rgb1.find(",")));
-			rgb1 = rgb1.substr(rgb1.find(",") + 1); //g,b
-			G1 = Getint(rgb1.substr(0, rgb1.find(",")));
-			rgb1 = rgb1.substr(rgb1.find(",") + 1); //b
-			B1 = Getint(rgb1);
+			str = str.substr(str.find("(") + 1); //r,g,b)(...)
+			colorArray[i][0] = Getint(str.substr(0, str.find(",")));
+			str = str.substr(str.find(",") + 1); //g,b)(...)
+			colorArray[i][1] = Getint(str.substr(0, str.find(",")));
+			str = str.substr(str.find(",") + 1); //b)(...)
+			colorArray[i][2] = Getint(str.substr(0, str.find(")")));
 		}
-		{
-			string rgb2;
-			rgb2 = str.substr(str.find(")(") + 2, str.find_last_of(")") - 16); //r,g,b
-			R2 = Getint(rgb2.substr(0, rgb2.find(",")));
-			rgb2 = rgb2.substr(rgb2.find(",") + 1); //g,b
-			G2 = Getint(rgb2.substr(0, rgb2.find(",")));
-			rgb2 = rgb2.substr(rgb2.find(",") + 1); //b
-			B2 = Getint(rgb2);
-		}
-		getColorXY(R1, G1, B1, R2, G2, B2, x, y);
+		getColorXY(colorArray, x, y);
 	}
 	//0,0
 	else
