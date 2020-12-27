@@ -481,7 +481,7 @@ string GetDocumentsPath()
 	}
 	return string(szDir);
 }
-//游戏全屏截取保存为BDO.bmp
+//游戏全屏截取保存为BDO.BMP
 void ScreenShot()
 {
 	HDC hDCScreen = GetDC(NULL);
@@ -495,7 +495,7 @@ void ScreenShot()
 	CString strFileName = GetDocumentsPath().c_str();
 	strFileName += _T("\\Black Desert\\ScreenShot\\");
 	CreateDirectory((LPCTSTR)strFileName, NULL);
-	strFileName += _T("BDO.bmp");
+	strFileName += _T("BDO.BMP");
 	m_MyImage.Save(strFileName, ImageFormatPNG);
 	m_MyImage.ReleaseDC();
 }
@@ -508,18 +508,14 @@ void GetXyColor()
 	ULONG_PTR gdiplusToken;
 	GdiplusStartupInput gdiplusStartupInput;
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.bmp";
+	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.BMP";
 	Bitmap *image = new Bitmap(Getwstring(imgPath).c_str());
-	Color color1, color2, color3, color4;
+	Color color1, color2;
 	image->GetPixel(x, y, &color1);
-	image->GetPixel(x + 3, y, &color2);
-	image->GetPixel(x + 3, y + 3, &color3);
-	image->GetPixel(x, y + 3, &color4);
+	image->GetPixel(x + 3, y + 3, &color2);
 	string colorStr;
 	colorStr = "color(" + to_string(color1.GetRed()) + "," + to_string(color1.GetGreen()) + "," + to_string(color1.GetBlue()) + ")(";
-	colorStr = colorStr + to_string(color2.GetRed()) + "," + to_string(color2.GetGreen()) + "," + to_string(color2.GetBlue()) + ")(";
-	colorStr = colorStr + to_string(color3.GetRed()) + "," + to_string(color3.GetGreen()) + "," + to_string(color3.GetBlue()) + ")(";
-	colorStr = colorStr + to_string(color4.GetRed()) + "," + to_string(color4.GetGreen()) + "," + to_string(color4.GetBlue()) + ")";
+	colorStr = colorStr + to_string(color2.GetRed()) + "," + to_string(color2.GetGreen()) + "," + to_string(color2.GetBlue()) + ")";
 	delete image;
 	GdiplusShutdown(gdiplusToken);
 	char *str = (char *)colorStr.c_str();
@@ -531,7 +527,9 @@ bool checkColor(Bitmap *image, int array[], int i, int j)
 {
 	Color color;
 	image->GetPixel(i, j, &color);
-	if (array[0] == color.GetRed() && array[1] == color.GetGreen() && array[2] == color.GetBlue())
+	if (array[0] == color.GetRed() &&
+		array[1] == color.GetGreen() &&
+		array[2] == color.GetBlue())
 	{
 		return true;
 	}
@@ -546,7 +544,7 @@ void getColorXY(int array[][3], int &x, int &y)
 	ULONG_PTR gdiplusToken;
 	GdiplusStartupInput gdiplusStartupInput;
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.bmp";
+	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.BMP";
 	Bitmap *image = new Bitmap(Getwstring(imgPath).c_str());
 	int width = image->GetWidth();
 	int height = image->GetHeight();
@@ -555,16 +553,16 @@ void getColorXY(int array[][3], int &x, int &y)
 	{
 		for (int j = 0; j < height; j++)
 		{
-			if (checkColor(image, array[0], i, j) && checkColor(image, array[1], i + 3, j) && checkColor(image, array[2], i + 3, j + 3) && checkColor(image, array[3], i, j + 3))
+			if (checkColor(image, array[0], i, j) && checkColor(image, array[1], i + 3, j + 3))
 			{
 				x = i;
 				y = j;
+				delete image;
+				GdiplusShutdown(gdiplusToken);
 				return;
 			}
 		}
 	}
-	delete image;
-	GdiplusShutdown(gdiplusToken);
 }
 //得到坐标
 void GetXY(string &str, int &x, int &y)
@@ -576,19 +574,19 @@ void GetXY(string &str, int &x, int &y)
 		str = to_string(x) + ',' + to_string(y);
 		Sleep(1000);
 	}
-	//color(255,255,255)(0,0,0)(255,255,255)(0,0,0)
+	//color(255,255,255)(0,0,0)
 	else if (str.substr(0, 5) == "color")
 	{
 		ScreenShot();
-		int colorArray[4][3];
+		int colorArray[2][3];
 		string strColor = str;
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 2; i++)
 		{
-			strColor = strColor.substr(strColor.find("(") + 1); //r,g,b)(...)
+			strColor = strColor.substr(strColor.find("(") + 1); //r,g,b)(r,g,b)
 			colorArray[i][0] = Getint(strColor.substr(0, strColor.find(",")));
-			strColor = strColor.substr(strColor.find(",") + 1); //g,b)(...)
+			strColor = strColor.substr(strColor.find(",") + 1); //g,b)(r,g,b)
 			colorArray[i][1] = Getint(strColor.substr(0, strColor.find(",")));
-			strColor = strColor.substr(strColor.find(",") + 1); //b)(...)
+			strColor = strColor.substr(strColor.find(",") + 1); //b)(r,g,b)
 			colorArray[i][2] = Getint(strColor.substr(0, strColor.find(")")));
 		}
 		getColorXY(colorArray, x, y);
@@ -622,7 +620,7 @@ void RunKey(string str[])
 		{
 			int x = 0, y = 0;
 			bool Sign = false;
-			if (str[1].find(',') != string::npos || str[1].find("color") != string::npos)
+			if (str[1].find(',') != string::npos)
 			{
 				GetXY(str[1], x, y);
 				Sign = true;

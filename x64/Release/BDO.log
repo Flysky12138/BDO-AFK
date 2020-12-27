@@ -1,7 +1,7 @@
 ﻿  BDO.cpp
   正在生成代码
-  3 of 685 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+  48 of 685 functions ( 7.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+    27 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   BDO.vcxproj -> E:\Game\Black Desert\BDO-AFK\x64\Release\BDO.exe
