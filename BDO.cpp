@@ -131,6 +131,7 @@ int GetCodeNum(string str, string keycode[][2])
 		}
 		i++;
 	}
+	return 0;
 }
 //返回num在数组中对应的字符串
 string GetCodeStr(int num, string keycode[][2])
@@ -144,6 +145,7 @@ string GetCodeStr(int num, string keycode[][2])
 		}
 		i++;
 	}
+	return 0;
 }
 //模拟键盘
 void K(int key, int delay, int end)
@@ -263,6 +265,7 @@ void OPEN(int end)
 	cout << "\r\u6253\u5f00" << endl;
 	ShowWindow(gameWhnd, 1);
 	SetWindowPos(gameWhnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+	SetWindowPos(gameWhnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	MoveMouse(960, 540);
 	mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 	if (end < 0)
