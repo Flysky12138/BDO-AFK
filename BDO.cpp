@@ -628,17 +628,20 @@ void RunKey(string str[])
 				GetXY(str[1], x, y);
 				Sign = true;
 			}
-			if (str[0] == "L")
+			if (x != 0 && y != 0)
 			{
-				Sign ? L(x, y, Getint(str[2])) : L(Getint(str[1]), Getint(str[2]));
-			}
-			if (str[0] == "R")
-			{
-				Sign ? R(x, y, Getint(str[2])) : R(Getint(str[1]), Getint(str[2]));
-			}
-			if (str[0] == "W")
-			{
-				W(x, y, Getint(str[2]), Getint(str[3]));
+				if (str[0] == "L")
+				{
+					Sign ? L(x, y, Getint(str[2])) : L(Getint(str[1]), Getint(str[2]));
+				}
+				if (str[0] == "R")
+				{
+					Sign ? R(x, y, Getint(str[2])) : R(Getint(str[1]), Getint(str[2]));
+				}
+				if (str[0] == "W")
+				{
+					W(x, y, Getint(str[2]), Getint(str[3]));
+				}
 			}
 		}
 		if (str[0] == "M")
@@ -647,7 +650,10 @@ void RunKey(string str[])
 			int x2 = 0, y2 = 0;
 			GetXY(str[1], x1, y1);
 			GetXY(str[2], x2, y2);
-			M(x1, y1, x2, y2, Getint(str[3]));
+			if (x1 != 0 && y1 != 0 && x2 != 0 && y2 != 0)
+			{
+				M(x1, y1, x2, y2, Getint(str[3]));
+			}
 		}
 		if (str[0] == "S")
 		{
