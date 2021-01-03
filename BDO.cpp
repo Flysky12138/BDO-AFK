@@ -231,6 +231,10 @@ void M(int x1, int y1, int x2, int y2, int end)
 	Sleep(50);
 	MoveMouse(x2, y2);
 	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+	Sleep(50);
+	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+	Sleep(50);
+	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 	Sleep(end);
 }
 //模拟鼠标滚轮
