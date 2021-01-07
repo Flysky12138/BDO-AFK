@@ -570,6 +570,8 @@ void getColorXY(int array[][3], int &x, int &y)
 			}
 		}
 	}
+	delete image;
+	GdiplusShutdown(gdiplusToken);
 }
 //得到坐标
 void GetXY(string &str, int &x, int &y)
