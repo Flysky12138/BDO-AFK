@@ -632,7 +632,7 @@ void RunKey(string str[])
 				GetXY(str[1], x, y);
 				Sign = true;
 			}
-			if (x != 0 && y != 0)
+			if (!Sign || (x != 0 && y != 0))
 			{
 				if (str[0] == "L")
 				{
