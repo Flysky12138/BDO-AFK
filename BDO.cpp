@@ -15,90 +15,91 @@ using namespace std;
 using namespace Gdiplus;
 
 string Code[200][5]; //待运行文本
-string KeyCode[10][2] = {
-	{"0", "48"},
-	{"1", "49"},
-	{"2", "50"},
-	{"3", "51"},
-	{"4", "52"},
-	{"5", "53"},
-	{"6", "54"},
-	{"7", "55"},
-	{"8", "56"},
-	{"9", "57"},
-}; //虚拟键码
-string GameKeyCode[80][2] = {
-	{"ESC", "1"},
-	{"1", "2"},
-	{"2", "3"},
-	{"3", "4"},
-	{"4", "5"},
-	{"5", "6"},
-	{"6", "7"},
-	{"7", "8"},
-	{"8", "9"},
-	{"9", "10"},
-	{"0", "11"},
-	{"", "12"},
-	{"", "13"},
-	{"", "14"},
-	{"TAB", "15"},
-	{"Q", "16"},
-	{"W", "17"},
-	{"E", "18"},
-	{"R", "19"},
-	{"T", "20"},
-	{"Y", "21"},
-	{"U", "22"},
-	{"I", "23"},
-	{"O", "24"},
-	{"P", "25"},
-	{"", "26"},
-	{"", "27"},
-	{"ENTER", "28"},
-	{"CTRL", "29"},
-	{"A", "30"},
-	{"S", "31"},
-	{"D", "32"},
-	{"F", "33"},
-	{"G", "34"},
-	{"H", "35"},
-	{"J", "36"},
-	{"K", "37"},
-	{"L", "38"},
-	{"", "39"},
-	{"", "40"},
-	{"~", "41"},
-	{"SHIFT", "42"},
-	{"", "43"},
-	{"Z", "44"},
-	{"X", "45"},
-	{"C", "46"},
-	{"V", "47"},
-	{"B", "48"},
-	{"N", "49"},
-	{"M", "50"},
-	{",", "51"},
-	{"", "52"},
-	{"", "53"},
-	{"", "54"},
-	{"", "55"},
-	{"ALT", "56"},
-	{"SPACE", "57"},
-	{"", "58"},
-	{"F1", "59"},
-	{"F2", "60"},
-	{"F3", "61"},
-	{"F4", "62"},
-	{"F5", "63"},
-	{"F6", "64"},
-	{"F7", "65"},
-	{"F8", "66"},
-	{"F9", "67"},
-	{"F10", "68"},
-	{"F11", "69"},
-	{"SCRLK", "70"},
-}; //硬件扫描代码
+string KeyCode[83][3] = {
+	{"Esc", "27", "1"},
+	{"1", "49", "2"},
+	{"2", "50", "3"},
+	{"3", "51", "4"},
+	{"4", "52", "5"},
+	{"5", "53", "6"},
+	{"6", "54", "7"},
+	{"7", "55", "8"},
+	{"8", "56", "9"},
+	{"9", "57", "10"},
+	{"0", "48", "11"},
+	{"-", "189", "12"},
+	{"=", "187", "13"},
+	{"Bs", "8", "14"},
+	{"Tab", "9", "15"},
+	{"Q", "81", "16"},
+	{"W", "87", "17"},
+	{"E", "68", "18"},
+	{"R", "82", "19"},
+	{"T", "84", "20"},
+	{"Y", "89", "21"},
+	{"U", "85", "22"},
+	{"I", "73", "23"},
+	{"O", "79", "24"},
+	{"P", "80", "25"},
+	{"[", "219", "26"},
+	{"]", "221", "27"},
+	{"Enter", "13", "28"},
+	{"Ctrl", "17", "29"},
+	{"A", "65", "30"},
+	{"S", "83", "31"},
+	{"D", "68", "32"},
+	{"F", "70", "33"},
+	{"G", "71", "34"},
+	{"H", "72", "35"},
+	{"J", "74", "36"},
+	{"K", "75", "37"},
+	{"L", "76", "38"},
+	{";", "186", "39"},
+	{"'", "222", "40"},
+	{"`", "192", "41"},
+	{"LShift", "160", "42"},
+	{"\\", "220", "43"},
+	{"Z", "90", "44"},
+	{"X", "88", "45"},
+	{"C", "67", "46"},
+	{"V", "86", "47"},
+	{"B", "66", "48"},
+	{"N", "78", "49"},
+	{"M", "77", "50"},
+	{",", "188", "51"},
+	{".", "190", "52"},
+	{"/", "191", "53"},
+	{"RShift", "161", "54"},
+	{"PrtSc", "42", "55"},
+	{"Alt", "18", "56"},
+	{"Space", "32", "57"},
+	{"Caps", "20", "58"},
+	{"F1", "112", "59"},
+	{"F2", "113", "60"},
+	{"F3", "114", "61"},
+	{"F4", "115", "62"},
+	{"F5", "116", "63"},
+	{"F6", "117", "64"},
+	{"F7", "118", "65"},
+	{"F8", "119", "66"},
+	{"F9", "120", "67"},
+	{"F10", "121", "68"},
+	{"Num", "144", "69"},
+	{"Scroll", "145", "70"},
+	{"Home", "36", "71"},
+	{"Up", "38", "72"},
+	{"PgUp", "33", "73"},
+	{"/-", "109", "74"},
+	{"Left", "37", "75"},
+	{"Center", "1", "76"},
+	{"Right", "39", "77"},
+	{"/+", "107", "78"},
+	{"End", "35", "79"},
+	{"Down", "40", "80"},
+	{"PgDn", "34", "81"},
+	{"Insert", "45", "82"},
+	{"Delete", "46", "83"},
+}; //按键名、虚拟键码、OEM扫描码
 HWND exeWhnd = GetConsoleWindow();
 HWND gameWhnd, headWhnd;
 int QuickKey = VK_OEM_3; //	`
@@ -112,70 +113,54 @@ int Getint(string str)
 //string to wstring
 wstring Getwstring(string str)
 {
-	std::string temp = str;
+	string temp = str;
 	int len = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)temp.c_str(), -1, NULL, 0);
 	wchar_t *wszUtf8 = new wchar_t[len + 1];
 	memset(wszUtf8, 0, len * 2 + 2);
 	MultiByteToWideChar(CP_ACP, 0, (LPCSTR)temp.c_str(), -1, (LPWSTR)wszUtf8, len);
 	return wszUtf8;
 }
-//返回str在数组中对应的键码值
-int GetCodeNum(string str, string keycode[][2])
+//返回str在数组中对应的值
+int GetCodeNum(string str, string keycode[][3], int tag)
 {
 	int i = 0;
 	while (keycode[i])
 	{
 		if (str == keycode[i][0])
 		{
-			return Getint(keycode[i][1]);
-		}
-		i++;
-	}
-	return 0;
-}
-//返回num在数组中对应的字符串
-string GetCodeStr(int num, string keycode[][2])
-{
-	int i = 0;
-	while (keycode[i])
-	{
-		if (to_string(num) == keycode[i][1])
-		{
-			return keycode[i][0];
+			if (tag == 0)
+			{
+				return Getint(keycode[i][1]);
+			}
+			else if (tag == 1)
+			{
+				return Getint(keycode[i][2]);
+			}
 		}
 		i++;
 	}
 	return 0;
 }
 //模拟键盘
-void K(int key, int delay, int end)
+void K(string key, int delay, int end)
 {
-	cout << "\r\u6309\u952e  [ " << GetCodeStr(key, GameKeyCode) << " ]" << endl;
-	keybd_event(0, key, 0, 0);
+	cout << "\r\u6309\u952e  [ " << key << " ]" << endl;
+	keybd_event(GetCodeNum(key, KeyCode, 0), GetCodeNum(key, KeyCode, 1), 0, 0);
 	Sleep(delay);
-	keybd_event(0, key, 2, 0);
-	Sleep(end);
-}
-//模拟键盘
-void K1(int key, int delay, int end)
-{
-	cout << "\r\u6309\u952e  [ " << GetCodeStr(key, KeyCode) << " ]" << endl;
-	keybd_event(key, 0, 0, 0);
-	Sleep(delay);
-	keybd_event(key, 0, 2, 0);
+	keybd_event(GetCodeNum(key, KeyCode, 0), GetCodeNum(key, KeyCode, 1), 2, 0);
 	Sleep(end);
 }
 //模拟键盘(组合按键)
-void K2(int key1, int key2, int delay, int end)
+void K2(string key1, string key2, int delay, int end)
 {
-	cout << "\r\u6309\u952e  [ " << GetCodeStr(key1, GameKeyCode) << " + " << GetCodeStr(key2, GameKeyCode) << " ]" << endl;
-	keybd_event(0, key1, 0, 0);
+	cout << "\r\u6309\u952e  [ " << key1 << " + " << key2 << " ]" << endl;
+	keybd_event(GetCodeNum(key1, KeyCode, 0), GetCodeNum(key1, KeyCode, 1), 0, 0);
 	Sleep(50);
-	keybd_event(0, key2, 0, 0);
+	keybd_event(GetCodeNum(key2, KeyCode, 0), GetCodeNum(key2, KeyCode, 1), 0, 0);
 	Sleep(delay);
-	keybd_event(0, key2, 2, 0);
+	keybd_event(GetCodeNum(key2, KeyCode, 0), GetCodeNum(key2, KeyCode, 1), 2, 0);
 	Sleep(50);
-	keybd_event(0, key1, 2, 0);
+	keybd_event(GetCodeNum(key1, KeyCode, 0), GetCodeNum(key1, KeyCode, 1), 2, 0);
 	Sleep(end);
 }
 //移动鼠标指针
@@ -615,15 +600,11 @@ void RunKey(string str[])
 	{
 		if (str[0] == "K")
 		{
-			K(GetCodeNum(str[1], GameKeyCode), Getint(str[2]), Getint(str[3]));
-		}
-		if (str[0] == "K1")
-		{
-			K1(GetCodeNum(str[1], KeyCode), Getint(str[2]), Getint(str[3]));
+			K(str[1], Getint(str[2]), Getint(str[3]));
 		}
 		if (str[0] == "K2")
 		{
-			K2(GetCodeNum(str[1], GameKeyCode), GetCodeNum(str[2], GameKeyCode), Getint(str[3]), Getint(str[4]));
+			K2(str[1], str[2], Getint(str[3]), Getint(str[4]));
 		}
 		if (str[0] == "L" || str[0] == "R" || str[0] == "W")
 		{
@@ -666,6 +647,11 @@ void RunKey(string str[])
 			S(Getint(str[1]));
 		}
 	}
+	if (str[0] == "KEY")
+	{
+		cout << "\r\u70ed\u952e  [ " << Getint(str[1]) << " ]" << endl;
+		SetHotKey(Getint(str[1]), "start");
+	}
 	if (str[0] == "OPEN")
 	{
 		OPEN(Getint(str[1]));
@@ -697,16 +683,9 @@ void RunCode()
 {
 	if (Code[0][0] == "BDO")
 	{
-		int num = 1, total = Getint(Code[0][1]), HotKey = Getint(Code[0][3]);
+		int num = 1, total = Getint(Code[0][1]);
 		while (total--)
 		{
-			if (HotKey)
-			{
-				CoutColor(100);
-				cout << "\u542f\u52a8\u70ed\u952e\u952e\u7801  " << HotKey << endl;
-				cout << "\u505c\u6b62\u70ed\u952e\u6309\u952e  END ";
-				SetHotKey(HotKey, "start");
-			}
 			system("cls");
 			CoutColor(111);
 			cout << "\u8fd0\u884c\u6b21\u6570: ";
@@ -773,7 +752,7 @@ int main(int argc, char *argv[])
 		SetTitle(argv[1]);
 		ReadFiletoCode(argv[1]);
 		Sleep(1000);
-		if (Getint(Code[0][3]))
+		if (true)
 		{
 			thread t(SetHotKey, 0, "stop");
 			t.detach();

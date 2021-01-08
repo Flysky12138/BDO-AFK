@@ -36,9 +36,6 @@ CLOSE
 K <key> <keyUp_delay(ms)> [wait(ms)]
 K Q 50 800
 
-K1 <key1> <keyUp_delay(ms)> [wait(ms)]
-K1 1 50 800
-
 K2 <key> <key> <keyUp_delay(ms)> [wait(ms)]
 K2 ALT Q 50 800
 ```
@@ -75,7 +72,7 @@ W <x,y>/<color(r,g,b)(r,g,b)> <downMove_times> [wait(ms)]
 W 0,0 3 800
 ```
 
-7. 鼠标左击拖动
+7. 鼠标左击拖动再左击
 
 ```
 M <x,y>/<color(r,g,b)(r,g,b)> <x,y>/<color(r,g,b)(r,g,b)> [wait(ms)]
@@ -93,8 +90,7 @@ S 500
 -   `runEnd_wait(s)`：单次脚本运行完后的等待时间，当倒计时到达 `3` 秒内且游戏最小化时将弹出窗口，`0` 秒时再隐藏
 -   `hotkey`：用于运行脚本的快捷按键，虚拟键码自行搜索，当设置有运行快捷键时按键 `End` 可结束脚本（正数：按键按下就执行，负数：按键抬起才执行）
 -   `wait(ms)`：运行单行命令后的等待时间
--   `key`：可填按键 `0-9` `A-Z` `F1-F11` `ESC` `TAB` `ENTER` `CTRL` `SHIFT` `ALT` `SPACE` `SCRLK` `~` `,`
--   `key1`：可填按键 `0-9`（当且仅当选择物品数量时才用此命令）
+-   `key`：可填按键 `0-9` `A-Z` `F1-F10` `Esc` `Tab` `Enter` `Ctrl` `LShift` `RShift` `Alt` `Space` `Scroll` `End` `Down` `PgDn` `Insert` `Delete` `PrtSc` `Caps` `Num` `Home` `Up` `PgUp` `Bs` `Left` `Center` `Right` `-` `=` `[` `]` `;` `'` `` ` `` `\` `,` `.` `/` `/-` `/+`
 -   `keyUp_delay(ms)`：按键按下到抬起之间的时间
 -   `x,y`：可以填写坐标如 `100,200`，也可以直接填写 `x,y`。当填写 `x,y` 时，程序第一次运行到这行代码时，你需要按快捷键 `` ALT+` `` 获取坐标，之后的运行就自动使用这次得到的坐标
 -   `color(r,g,b)(r,g,b)`：获取图片 `BDO.BMP`（自动截取的图片，保存在游戏截图文件夹内）中第一个满足条件的颜色的坐标（两点是 3 像素矩形左上与右下的顶点，匹配成功后取左上角一点为匹配到的坐标）
@@ -110,7 +106,7 @@ S 500
 
 ```
 FOR <run_times>
-K/K1/K2/W/L/R/M
+···
 END
 ```
 
