@@ -15,7 +15,10 @@ using namespace std;
 using namespace Gdiplus;
 
 string Code[200][5]; //待运行文本
-string KeyCode[83][3] = {
+string KeyCode[86][3] = {
+	{"Lb", "1", "0"},
+	{"Rb", "2", "0"},
+	{"Mb", "4", "0"},
 	{"Esc", "27", "1"},
 	{"1", "49", "2"},
 	{"2", "50", "3"},
