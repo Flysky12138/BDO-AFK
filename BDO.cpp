@@ -243,6 +243,36 @@ void S(int end)
 {
 	Sleep(end);
 }
+//热键运行
+void KU(string str)
+{
+	cout << "\r\u70ed\u952e  [ " << str << " ]" << endl;
+	int hotkey = GetCodeNum(str, KeyCode, 0);
+	while (true)
+	{
+		if (GetAsyncKeyState(hotkey) & 0x8000)
+		{
+			while (GetAsyncKeyState(hotkey) & 0x8000)
+			{
+				Sleep(1);
+			}
+			break;
+		}
+		Sleep(1);
+	}
+}
+void KD(string str)
+{
+	int hotkey = GetCodeNum(str, KeyCode, 0);
+	while (true)
+	{
+		if (GetAsyncKeyState(hotkey) & 0x8000)
+		{
+			break;
+		}
+		Sleep(1);
+	}
+}
 //打开游戏
 void OPEN(int end)
 {
@@ -345,46 +375,6 @@ void ShowTime(int delay)
 		}
 		Sleep(1000);
 		delay--;
-	}
-}
-//设置热键
-void SetHotKey(int key, string tag)
-{
-	if (tag == "start")
-	{
-		while (true)
-		{
-			if (key > 0)
-			{
-				if (GetAsyncKeyState(key) & 0x8000)
-				{
-					break;
-				}
-			}
-			else
-			{
-				if (GetAsyncKeyState(-key) & 0x8000)
-				{
-					while (GetAsyncKeyState(-key) & 0x8000)
-					{
-						Sleep(1);
-					}
-					break;
-				}
-			}
-			Sleep(1);
-		}
-	}
-	else if (tag == "stop")
-	{
-		while (true)
-		{
-			if (GetAsyncKeyState(VK_END) & 0x8000)
-			{
-				exit(0);
-			}
-			Sleep(1);
-		}
 	}
 }
 //设置窗口标题
@@ -647,10 +637,13 @@ void RunKey(string str[])
 			S(Getint(str[1]));
 		}
 	}
-	if (str[0] == "KEY")
+	if (str[0] == "KU")
 	{
-		cout << "\r\u70ed\u952e  [ " << Getint(str[1]) << " ]" << endl;
-		SetHotKey(Getint(str[1]), "start");
+		KU(str[1]);
+	}
+	if (str[0] == "KD")
+	{
+		KD(str[1]);
 	}
 	if (str[0] == "OPEN")
 	{
@@ -752,11 +745,6 @@ int main(int argc, char *argv[])
 		SetTitle(argv[1]);
 		ReadFiletoCode(argv[1]);
 		Sleep(1000);
-		if (true)
-		{
-			thread t(SetHotKey, 0, "stop");
-			t.detach();
-		}
 		RunCode();
 		break;
 	default:

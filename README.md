@@ -89,13 +89,17 @@ S 500
 9. 启动热键
 
 ```
-KEY <hotkey>
-KEY 107
+KD <key>
+KD /+
+#按键按下执行
+
+KU <key>
+KU /+
+#按键抬起执行
 ```
 
 -   `run_times`：运行次数
 -   `runEnd_wait(s)`：单次脚本运行完后的等待时间，当倒计时到达 `3` 秒内且游戏最小化时将弹出窗口，`0` 秒时再隐藏
--   `hotkey`：用于运行脚本的快捷按键，虚拟键码自行搜索，`End` 键可结束脚本（正数：按键按下就执行，负数：按键抬起才执行）
 -   `wait(ms)`：运行单行命令后的等待时间
 -   `key`：可填按键 `0-9` `A-Z` `F1-F10` `Esc` `Tab` `Enter` `Ctrl` `LShift` `RShift` `Alt` `Space` `Scroll` `End` `Down` `PgDn` `Insert` `Delete` `PrtSc` `Caps` `Num` `Home` `Up` `PgUp` `Bs` `Left` `Center` `Right` `-` `=` `[` `]` `;` `'` `` ` `` `\` `,` `.` `/` `/-` `/+`
 -   `keyUp_delay(ms)`：按键按下到抬起之间的时间
