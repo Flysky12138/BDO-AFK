@@ -15,8 +15,9 @@
 1. 头部（必须写且在第一行）
 
 ```
-BDO <run_times> <runEnd_wait(s)>
-BDO 3 1
+BDO <run_times> <runEnd_wait(s)> [key]
+BDO 3 1 End
+#key：停止热键
 ```
 
 2. 打开 / 关闭游戏

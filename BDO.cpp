@@ -280,6 +280,19 @@ void KD(string str)
 		Sleep(1);
 	}
 }
+//热键停止
+void Kill(string str)
+{
+	int hotkey = GetCodeNum(str, KeyCode, 0);
+	while (true)
+	{
+		if (GetAsyncKeyState(hotkey) & 0x8000)
+		{
+			exit(0);
+		}
+		Sleep(1);
+	}
+}
 //发送字符串
 void ClipBoard(char *str);
 void CV(string str, int end)
@@ -789,6 +802,11 @@ int main(int argc, char *argv[])
 		SetStyle();
 		SetTitle(argv[1]);
 		ReadFiletoCode(argv[1]);
+		if (Code[0][3] != "\0")
+		{
+			thread t(Kill, Code[0][3]);
+			t.detach();
+		}
 		Sleep(1000);
 		RunCode();
 		break;
