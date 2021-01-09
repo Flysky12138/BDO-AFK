@@ -169,9 +169,10 @@ void K2(string key1, string key2, int delay, int end)
 //移动鼠标指针
 void MoveMouse(int x, int y)
 {
-	RECT rect = {x, y, x + 1, y + 1};
-	ClipCursor(&rect);
-	ClipCursor(NULL);
+	// RECT rect = {x, y, x + 1, y + 1};
+	// ClipCursor(&rect);
+	// ClipCursor(NULL);
+	SetCursorPos(x, y);
 	Sleep(50);
 }
 //模拟鼠标左击
@@ -266,6 +267,7 @@ void KU(string str)
 }
 void KD(string str)
 {
+	cout << "\r\u70ed\u952e  [ " << str << " ]" << endl;
 	int hotkey = GetCodeNum(str, KeyCode, 0);
 	while (true)
 	{
@@ -275,6 +277,23 @@ void KD(string str)
 		}
 		Sleep(1);
 	}
+}
+//发送字符串
+void ClipBoard(char *str);
+void CV(string str, int end)
+{
+	str = str.substr(str.find('"') + 1, str.find_last_of('"') - 1);
+	cout << "\r\u7c98\u8d34  [ " << str << " ]" << endl;
+	char *p = (char *)str.c_str();
+	ClipBoard(p);
+	keybd_event(GetCodeNum("Ctrl", KeyCode, 0), GetCodeNum("Ctrl", KeyCode, 1), 0, 0);
+	Sleep(50);
+	keybd_event(GetCodeNum("V", KeyCode, 0), GetCodeNum("V", KeyCode, 1), 0, 0);
+	Sleep(50);
+	keybd_event(GetCodeNum("V", KeyCode, 0), GetCodeNum("V", KeyCode, 1), 2, 0);
+	Sleep(50);
+	keybd_event(GetCodeNum("Ctrl", KeyCode, 0), GetCodeNum("Ctrl", KeyCode, 1), 2, 0);
+	Sleep(end);
 }
 //打开游戏
 void OPEN(int end)
@@ -286,10 +305,15 @@ void OPEN(int end)
 	headWhnd = GetForegroundWindow();
 	cout << "\r\u6253\u5f00" << endl;
 	ShowWindow(gameWhnd, 1);
+
+	SetForegroundWindow(gameWhnd);
+	SetActiveWindow(gameWhnd);
+	SetFocus(gameWhnd);
+
 	SetWindowPos(gameWhnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	SetWindowPos(gameWhnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-	MoveMouse(960, 540);
-	mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+	// MoveMouse(960, 540);
+	// mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 	if (end < 0)
 	{
 		end = -end;
@@ -647,6 +671,10 @@ void RunKey(string str[])
 	if (str[0] == "KD")
 	{
 		KD(str[1]);
+	}
+	if (str[0] == "CV")
+	{
+		CV(str[1], Getint(str[2]));
 	}
 	if (str[0] == "OPEN")
 	{
