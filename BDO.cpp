@@ -9,6 +9,8 @@
 #include <shlobj.h>
 #include <windows.h>
 #pragma comment(lib, "Gdiplus.lib")
+#pragma warning(disable : 4267)
+#pragma warning(disable : 4244)
 #pragma warning(disable : 4996)
 
 using namespace std;
@@ -287,11 +289,9 @@ void CV(string str, int end)
 	char *p = (char *)str.c_str();
 	ClipBoard(p);
 	keybd_event(GetCodeNum("Ctrl", KeyCode, 0), GetCodeNum("Ctrl", KeyCode, 1), 0, 0);
-	Sleep(50);
 	keybd_event(GetCodeNum("V", KeyCode, 0), GetCodeNum("V", KeyCode, 1), 0, 0);
 	Sleep(50);
 	keybd_event(GetCodeNum("V", KeyCode, 0), GetCodeNum("V", KeyCode, 1), 2, 0);
-	Sleep(50);
 	keybd_event(GetCodeNum("Ctrl", KeyCode, 0), GetCodeNum("Ctrl", KeyCode, 1), 2, 0);
 	Sleep(end);
 }
@@ -305,15 +305,13 @@ void OPEN(int end)
 	headWhnd = GetForegroundWindow();
 	cout << "\r\u6253\u5f00" << endl;
 	ShowWindow(gameWhnd, 1);
-
-	SetForegroundWindow(gameWhnd);
-	SetActiveWindow(gameWhnd);
-	SetFocus(gameWhnd);
-
+	//SetForegroundWindow(gameWhnd);
+	//SetActiveWindow(gameWhnd);
+	//SetFocus(gameWhnd);
 	SetWindowPos(gameWhnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	SetWindowPos(gameWhnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-	// MoveMouse(960, 540);
-	// mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+	MoveMouse(960, 540);
+	mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 	if (end < 0)
 	{
 		end = -end;
@@ -336,6 +334,20 @@ void CLOSE()
 		SetForegroundWindow(headWhnd);
 	}
 }
+//转码读取UTF-8文件
+char *changeTxtEncoding(char *szU8)
+{
+	int wcsLen = MultiByteToWideChar(CP_UTF8, NULL, szU8, strlen(szU8), NULL, 0);
+	wchar_t *wszString = new wchar_t[wcsLen + 1];
+	MultiByteToWideChar(CP_UTF8, NULL, szU8, strlen(szU8), wszString, wcsLen);
+	wszString[wcsLen] = '\0';
+	cout << wszString << endl;
+	int ansiLen = WideCharToMultiByte(CP_ACP, NULL, wszString, wcslen(wszString), NULL, 0, NULL, NULL);
+	char *szAnsi = new char[ansiLen + 1];
+	WideCharToMultiByte(CP_ACP, NULL, wszString, wcslen(wszString), szAnsi, ansiLen, NULL, NULL);
+	szAnsi[ansiLen] = '\0';
+	return szAnsi;
+}
 //读取文件并储存于Code
 void ReadFiletoCode(string file)
 {
@@ -357,7 +369,9 @@ void ReadFiletoCode(string file)
 			istringstream str(line);
 			while (str >> out)
 			{
-				Code[length][y] = out;
+				char *strc = new char[strlen(out.c_str()) + 1];
+				strcpy(strc, out.c_str());
+				Code[length][y] = changeTxtEncoding(strc);
 				y++;
 			}
 			length++;
