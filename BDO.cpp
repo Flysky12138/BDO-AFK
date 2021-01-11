@@ -150,22 +150,28 @@ int GetCodeNum(string str, string keycode[][3], int tag)
 void K(string key, int delay, int end)
 {
 	cout << "\r\u6309\u952e  [ " << key << " ]" << endl;
-	keybd_event(GetCodeNum(key, KeyCode, 0), GetCodeNum(key, KeyCode, 1), 0, 0);
+	int e1 = GetCodeNum(key, KeyCode, 0);
+	int e2 = GetCodeNum(key, KeyCode, 1);
+	keybd_event(e1, e2, 0, 0);
 	Sleep(delay);
-	keybd_event(GetCodeNum(key, KeyCode, 0), GetCodeNum(key, KeyCode, 1), 2, 0);
+	keybd_event(e1, e2, 2, 0);
 	Sleep(end);
 }
 //模拟键盘(组合按键)
 void K2(string key1, string key2, int delay, int end)
 {
 	cout << "\r\u6309\u952e  [ " << key1 << " + " << key2 << " ]" << endl;
-	keybd_event(GetCodeNum(key1, KeyCode, 0), GetCodeNum(key1, KeyCode, 1), 0, 0);
+	int e11 = GetCodeNum(key1, KeyCode, 0);
+	int e12 = GetCodeNum(key1, KeyCode, 1);
+	int e21 = GetCodeNum(key2, KeyCode, 0);
+	int e22 = GetCodeNum(key2, KeyCode, 1);
+	keybd_event(e11, e12, 0, 0);
 	Sleep(50);
-	keybd_event(GetCodeNum(key2, KeyCode, 0), GetCodeNum(key2, KeyCode, 1), 0, 0);
+	keybd_event(e21, e22, 0, 0);
 	Sleep(delay);
-	keybd_event(GetCodeNum(key2, KeyCode, 0), GetCodeNum(key2, KeyCode, 1), 2, 0);
+	keybd_event(e21, e22, 2, 0);
 	Sleep(50);
-	keybd_event(GetCodeNum(key1, KeyCode, 0), GetCodeNum(key1, KeyCode, 1), 2, 0);
+	keybd_event(e11, e12, 2, 0);
 	Sleep(end);
 }
 //移动鼠标指针
@@ -322,9 +328,9 @@ void OPEN(int end)
 	//SetActiveWindow(gameWhnd);
 	//SetFocus(gameWhnd);
 	SetWindowPos(gameWhnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-	SetWindowPos(gameWhnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	MoveMouse(960, 540);
 	mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+	SetWindowPos(gameWhnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	if (end < 0)
 	{
 		end = -end;
