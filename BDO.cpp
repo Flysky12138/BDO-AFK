@@ -107,7 +107,7 @@ string KeyCode[86][3] = {
 }; //按键名、虚拟键码、OEM扫描码
 HWND exeWhnd = GetConsoleWindow();
 HWND gameWhnd, headWhnd;
-int QuickKey = VK_OEM_3; //	`
+int QuickKey = VK_OEM_3;
 string Title = "BDO - Flysky";
 
 //string to int
@@ -126,20 +126,20 @@ wstring Getwstring(string str)
 	return wszUtf8;
 }
 //返回str在数组中对应的值
-int GetCodeNum(string str, string keycode[][3], int tag)
+int GetCodeNum(string str, int tag)
 {
 	int i = 0;
-	while (keycode[i])
+	while (KeyCode[i])
 	{
-		if (str == keycode[i][0])
+		if (str == KeyCode[i][0])
 		{
 			if (tag == 0)
 			{
-				return Getint(keycode[i][1]);
+				return Getint(KeyCode[i][1]);
 			}
 			else if (tag == 1)
 			{
-				return Getint(keycode[i][2]);
+				return Getint(KeyCode[i][2]);
 			}
 		}
 		i++;
@@ -150,8 +150,8 @@ int GetCodeNum(string str, string keycode[][3], int tag)
 void K(string key, int delay, int end)
 {
 	cout << "\r\u6309\u952e  [ " << key << " ]" << endl;
-	int e1 = GetCodeNum(key, KeyCode, 0);
-	int e2 = GetCodeNum(key, KeyCode, 1);
+	int e1 = GetCodeNum(key, 0);
+	int e2 = GetCodeNum(key, 1);
 	keybd_event(e1, e2, 0, 0);
 	Sleep(delay);
 	keybd_event(e1, e2, 2, 0);
@@ -161,10 +161,10 @@ void K(string key, int delay, int end)
 void K2(string key1, string key2, int delay, int end)
 {
 	cout << "\r\u6309\u952e  [ " << key1 << " + " << key2 << " ]" << endl;
-	int e11 = GetCodeNum(key1, KeyCode, 0);
-	int e12 = GetCodeNum(key1, KeyCode, 1);
-	int e21 = GetCodeNum(key2, KeyCode, 0);
-	int e22 = GetCodeNum(key2, KeyCode, 1);
+	int e11 = GetCodeNum(key1, 0);
+	int e12 = GetCodeNum(key1, 1);
+	int e21 = GetCodeNum(key2, 0);
+	int e22 = GetCodeNum(key2, 1);
 	keybd_event(e11, e12, 0, 0);
 	Sleep(50);
 	keybd_event(e21, e22, 0, 0);
@@ -259,7 +259,7 @@ void S(int end)
 void KU(string str)
 {
 	cout << "\r\u70ed\u952e  [ " << str << " ]" << endl;
-	int hotkey = GetCodeNum(str, KeyCode, 0);
+	int hotkey = GetCodeNum(str, 0);
 	while (true)
 	{
 		if (GetAsyncKeyState(hotkey) & 0x8000)
@@ -276,7 +276,7 @@ void KU(string str)
 void KD(string str)
 {
 	cout << "\r\u70ed\u952e  [ " << str << " ]" << endl;
-	int hotkey = GetCodeNum(str, KeyCode, 0);
+	int hotkey = GetCodeNum(str, 0);
 	while (true)
 	{
 		if (GetAsyncKeyState(hotkey) & 0x8000)
@@ -289,7 +289,7 @@ void KD(string str)
 //热键停止
 void Kill(string str)
 {
-	int hotkey = GetCodeNum(str, KeyCode, 0);
+	int hotkey = GetCodeNum(str, 0);
 	while (true)
 	{
 		if (GetAsyncKeyState(hotkey) & 0x8000)
@@ -307,11 +307,15 @@ void CV(string str, int end)
 	cout << "\r\u7c98\u8d34  [ " << str << " ]" << endl;
 	char *p = (char *)str.c_str();
 	ClipBoard(p);
-	keybd_event(GetCodeNum("Ctrl", KeyCode, 0), GetCodeNum("Ctrl", KeyCode, 1), 0, 0);
-	keybd_event(GetCodeNum("V", KeyCode, 0), GetCodeNum("V", KeyCode, 1), 0, 0);
+	int e11 = GetCodeNum("Ctrl", 0);
+	int e12 = GetCodeNum("Ctrl", 1);
+	int e21 = GetCodeNum("V", 0);
+	int e22 = GetCodeNum("V", 1);
+	keybd_event(e11, e12, 0, 0);
+	keybd_event(e21, e22, 0, 0);
 	Sleep(50);
-	keybd_event(GetCodeNum("V", KeyCode, 0), GetCodeNum("V", KeyCode, 1), 2, 0);
-	keybd_event(GetCodeNum("Ctrl", KeyCode, 0), GetCodeNum("Ctrl", KeyCode, 1), 2, 0);
+	keybd_event(e21, e22, 2, 0);
+	keybd_event(e11, e12, 2, 0);
 	Sleep(end);
 }
 //打开游戏
@@ -328,6 +332,7 @@ void OPEN(int end)
 	//SetActiveWindow(gameWhnd);
 	//SetFocus(gameWhnd);
 	SetWindowPos(gameWhnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+	Sleep(50);
 	MoveMouse(960, 540);
 	mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 	SetWindowPos(gameWhnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
