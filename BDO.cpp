@@ -146,13 +146,13 @@ int GetCodeNum(std::string str, int tag)
 	return 0;
 }
 //模拟键盘
-void K(std::string key, int delay, int end)
+void K(std::string key, int end)
 {
 	std::cout << "\r\u6309\u952e  [ " << key << " ]" << std::endl;
 	int e1 = GetCodeNum(key, 0);
 	int e2 = GetCodeNum(key, 1);
 	keybd_event(e1, e2, 0, 0);
-	Sleep(delay);
+	Sleep(50);
 	keybd_event(e1, e2, 2, 0);
 	Sleep(end);
 }
@@ -651,11 +651,11 @@ void GetXY(std::string &str, int &x, int &y)
 //单行脚本处理
 void RunKey(std::string str[])
 {
-	if (IsWindowVisible(gameWhnd))
+	if (gameWhnd == GetForegroundWindow())
 	{
 		if (str[0] == "K")
 		{
-			K(str[1], Getint(str[2]), Getint(str[3]));
+			K(str[1], Getint(str[2]));
 		}
 		if (str[0] == "K2")
 		{
