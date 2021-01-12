@@ -34,8 +34,8 @@ CLOSE
 3. 按键
 
 ```
-K <key> <keyUp_delay(ms)> [wait(ms)]
-K Q 50 800
+K <key> [wait(ms)]
+K Q 800
 
 K2 <key> <key> <keyUp_delay(ms)> [wait(ms)]
 K2 ALT Q 50 800
