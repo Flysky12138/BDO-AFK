@@ -165,9 +165,11 @@ void K2(std::string key1, std::string key2, int delay, int end)
 	int e21 = GetCodeNum(key2, 0);
 	int e22 = GetCodeNum(key2, 1);
 	keybd_event(e11, e12, 0, 0);
+	Sleep(50);
 	keybd_event(e21, e22, 0, 0);
 	Sleep(delay);
 	keybd_event(e21, e22, 2, 0);
+	Sleep(50);
 	keybd_event(e11, e12, 2, 0);
 	Sleep(end);
 }
@@ -309,9 +311,11 @@ void CV(std::string str, int end)
 	int e21 = GetCodeNum("V", 0);
 	int e22 = GetCodeNum("V", 1);
 	keybd_event(e11, e12, 0, 0);
+	Sleep(50);
 	keybd_event(e21, e22, 0, 0);
 	Sleep(50);
 	keybd_event(e21, e22, 2, 0);
+	Sleep(50);
 	keybd_event(e11, e12, 2, 0);
 	Sleep(end);
 }
@@ -329,9 +333,10 @@ void OPEN(int end)
 	//SetActiveWindow(gameWhnd);
 	//SetFocus(gameWhnd);
 	SetWindowPos(gameWhnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-	Sleep(50);
 	MoveMouse(960, 540);
-	mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+	Sleep(50);
+	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 	SetWindowPos(gameWhnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	if (end < 0)
 	{
