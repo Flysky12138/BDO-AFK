@@ -7,17 +7,18 @@
 #include <atlimage.h>
 #include <gdiplus.h>
 #include <shlobj.h>
+#include <vector>
 #include <windows.h>
 #pragma comment(lib, "Gdiplus.lib")
 #pragma warning(disable : 4267)
 #pragma warning(disable : 4244)
 #pragma warning(disable : 4996)
 
-using namespace std;
-using namespace Gdiplus;
-
-string Code[200][5]; //待运行文本
-string KeyCode[86][3] = {
+HWND exeWhnd = GetConsoleWindow();
+HWND gameWhnd, headWhnd;
+int QuickKey = VK_OEM_3;
+std::string Title = "BDO - Flysky";
+std::string KeyCode[86][3] = {
 	{"Lb", "1", "0"},
 	{"Rb", "2", "0"},
 	{"Mb", "4", "0"},
@@ -105,20 +106,18 @@ string KeyCode[86][3] = {
 	{"Insert", "45", "82"},
 	{"Delete", "46", "83"},
 }; //按键名、虚拟键码、OEM扫描码
-HWND exeWhnd = GetConsoleWindow();
-HWND gameWhnd, headWhnd;
-int QuickKey = VK_OEM_3;
-string Title = "BDO - Flysky";
+std::string Code[200][5];
+int Length = 0;
 
 //string to int
-int Getint(string str)
+int Getint(std::string str)
 {
 	return atoi(str.c_str());
 }
 //string to wstring
-wstring Getwstring(string str)
+std::wstring Getwstring(std::string str)
 {
-	string temp = str;
+	std::string temp = str;
 	int len = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)temp.c_str(), -1, NULL, 0);
 	wchar_t *wszUtf8 = new wchar_t[len + 1];
 	memset(wszUtf8, 0, len * 2 + 2);
@@ -126,7 +125,7 @@ wstring Getwstring(string str)
 	return wszUtf8;
 }
 //返回str在数组中对应的值
-int GetCodeNum(string str, int tag)
+int GetCodeNum(std::string str, int tag)
 {
 	int i = 0;
 	while (KeyCode[i])
@@ -147,9 +146,9 @@ int GetCodeNum(string str, int tag)
 	return 0;
 }
 //模拟键盘
-void K(string key, int delay, int end)
+void K(std::string key, int delay, int end)
 {
-	cout << "\r\u6309\u952e  [ " << key << " ]" << endl;
+	std::cout << "\r\u6309\u952e  [ " << key << " ]" << std::endl;
 	int e1 = GetCodeNum(key, 0);
 	int e2 = GetCodeNum(key, 1);
 	keybd_event(e1, e2, 0, 0);
@@ -158,19 +157,17 @@ void K(string key, int delay, int end)
 	Sleep(end);
 }
 //模拟键盘(组合按键)
-void K2(string key1, string key2, int delay, int end)
+void K2(std::string key1, std::string key2, int delay, int end)
 {
-	cout << "\r\u6309\u952e  [ " << key1 << " + " << key2 << " ]" << endl;
+	std::cout << "\r\u6309\u952e  [ " << key1 << " + " << key2 << " ]" << std::endl;
 	int e11 = GetCodeNum(key1, 0);
 	int e12 = GetCodeNum(key1, 1);
 	int e21 = GetCodeNum(key2, 0);
 	int e22 = GetCodeNum(key2, 1);
 	keybd_event(e11, e12, 0, 0);
-	Sleep(50);
 	keybd_event(e21, e22, 0, 0);
 	Sleep(delay);
 	keybd_event(e21, e22, 2, 0);
-	Sleep(50);
 	keybd_event(e11, e12, 2, 0);
 	Sleep(end);
 }
@@ -186,7 +183,7 @@ void MoveMouse(int x, int y)
 //模拟鼠标左击
 void L(int x, int y, int end)
 {
-	cout << "\r\u5de6\u51fb  [ " << x << "," << y << " ]" << endl;
+	std::cout << "\r\u5de6\u51fb  [ " << x << "," << y << " ]" << std::endl;
 	MoveMouse(x, y);
 	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 	Sleep(50);
@@ -195,7 +192,7 @@ void L(int x, int y, int end)
 }
 void L(int delay, int end)
 {
-	cout << "\r\u5de6\u51fb" << endl;
+	std::cout << "\r\u5de6\u51fb" << std::endl;
 	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 	Sleep(delay);
 	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
@@ -204,7 +201,7 @@ void L(int delay, int end)
 //模拟鼠标右击
 void R(int x, int y, int end)
 {
-	cout << "\r\u53f3\u51fb  [ " << x << "," << y << " ]" << endl;
+	std::cout << "\r\u53f3\u51fb  [ " << x << "," << y << " ]" << std::endl;
 	MoveMouse(x, y);
 	mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
 	Sleep(50);
@@ -213,7 +210,7 @@ void R(int x, int y, int end)
 }
 void R(int delay, int end)
 {
-	cout << "\r\u53f3\u51fb" << endl;
+	std::cout << "\r\u53f3\u51fb" << std::endl;
 	mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
 	Sleep(delay);
 	mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
@@ -222,7 +219,7 @@ void R(int delay, int end)
 //模拟鼠标拖动
 void M(int x1, int y1, int x2, int y2, int end)
 {
-	cout << "\r\u79fb\u52a8  [ " << x1 << "," << y1 << " " << x2 << "," << y2 << " ]" << endl;
+	std::cout << "\r\u79fb\u52a8  [ " << x1 << "," << y1 << " " << x2 << "," << y2 << " ]" << std::endl;
 	MoveMouse(x1, y1);
 	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 	Sleep(50);
@@ -237,7 +234,7 @@ void M(int x1, int y1, int x2, int y2, int end)
 //模拟鼠标滚轮
 void W(int x, int y, int z, int end)
 {
-	cout << "\r\u6eda\u8f6e  [ " << x << "," << y << " " << z << " ]" << endl;
+	std::cout << "\r\u6eda\u8f6e  [ " << x << "," << y << " " << z << " ]" << std::endl;
 	MoveMouse(x, y);
 	while (z)
 	{
@@ -256,9 +253,9 @@ void S(int end)
 	Sleep(end);
 }
 //热键运行
-void KU(string str)
+void KU(std::string str)
 {
-	cout << "\r\u70ed\u952e  [ " << str << " ]" << endl;
+	std::cout << "\r\u70ed\u952e  [ " << str << " ]" << std::endl;
 	int hotkey = GetCodeNum(str, 0);
 	while (true)
 	{
@@ -273,9 +270,9 @@ void KU(string str)
 		Sleep(1);
 	}
 }
-void KD(string str)
+void KD(std::string str)
 {
-	cout << "\r\u70ed\u952e  [ " << str << " ]" << endl;
+	std::cout << "\r\u70ed\u952e  [ " << str << " ]" << std::endl;
 	int hotkey = GetCodeNum(str, 0);
 	while (true)
 	{
@@ -287,7 +284,7 @@ void KD(string str)
 	}
 }
 //热键停止
-void Kill(string str)
+void Kill(std::string str)
 {
 	int hotkey = GetCodeNum(str, 0);
 	while (true)
@@ -301,10 +298,10 @@ void Kill(string str)
 }
 //发送字符串
 void ClipBoard(char *str);
-void CV(string str, int end)
+void CV(std::string str, int end)
 {
 	str = str.substr(str.find('"') + 1, str.find_last_of('"') - 1);
-	cout << "\r\u7c98\u8d34  [ " << str << " ]" << endl;
+	std::cout << "\r\u7c98\u8d34  [ " << str << " ]" << std::endl;
 	char *p = (char *)str.c_str();
 	ClipBoard(p);
 	int e11 = GetCodeNum("Ctrl", 0);
@@ -326,7 +323,7 @@ void OPEN(int end)
 		Sleep(5000);
 	}
 	headWhnd = GetForegroundWindow();
-	cout << "\r\u6253\u5f00" << endl;
+	std::cout << "\r\u6253\u5f00" << std::endl;
 	ShowWindow(gameWhnd, 1);
 	//SetForegroundWindow(gameWhnd);
 	//SetActiveWindow(gameWhnd);
@@ -339,7 +336,7 @@ void OPEN(int end)
 	if (end < 0)
 	{
 		end = -end;
-		Sleep(100);
+		Sleep(50);
 		SetWindowPos(gameWhnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	}
 	if (!IsWindowVisible(gameWhnd))
@@ -353,7 +350,7 @@ void CLOSE()
 {
 	if (IsWindowVisible(gameWhnd))
 	{
-		cout << "\r\u5173\u95ed" << endl;
+		std::cout << "\r\u5173\u95ed" << std::endl;
 		ShowWindow(gameWhnd, 0);
 		SetForegroundWindow(headWhnd);
 	}
@@ -365,7 +362,6 @@ char *changeTxtEncoding(char *szU8)
 	wchar_t *wszString = new wchar_t[wcsLen + 1];
 	MultiByteToWideChar(CP_UTF8, NULL, szU8, strlen(szU8), wszString, wcsLen);
 	wszString[wcsLen] = '\0';
-	cout << wszString << endl;
 	int ansiLen = WideCharToMultiByte(CP_ACP, NULL, wszString, wcslen(wszString), NULL, 0, NULL, NULL);
 	char *szAnsi = new char[ansiLen + 1];
 	WideCharToMultiByte(CP_ACP, NULL, wszString, wcslen(wszString), szAnsi, ansiLen, NULL, NULL);
@@ -373,32 +369,31 @@ char *changeTxtEncoding(char *szU8)
 	return szAnsi;
 }
 //读取文件并储存于Code
-void ReadFiletoCode(string file)
+void ReadFiletoCode(std::string file)
 {
-	string line, out;
-	ifstream in(file);
+	std::string line, out;
+	std::ifstream in(file);
 	if (in)
 	{
-		for (int i = 0; i < sizeof(Code) / sizeof(Code[0]); i++)
-		{
-			for (int j = 0; j < sizeof(Code[0]) / sizeof(Code[0][0]); j++)
-			{
-				Code[i][j] = "\0";
-			}
-		}
-		int length = 0;
+		// for (int i = 0; i < sizeof(Code) / sizeof(Code[0]); i++)
+		// {
+		// 	for (int j = 0; j < sizeof(Code[0]) / sizeof(Code[0][0]); j++)
+		// 	{
+		// 		Code[i][j] = "\0";
+		// 	}
+		// }
 		while (getline(in, line))
 		{
 			int y = 0;
-			istringstream str(line);
+			std::istringstream str(line);
 			while (str >> out)
 			{
 				char *strc = new char[strlen(out.c_str()) + 1];
 				strcpy(strc, out.c_str());
-				Code[length][y] = changeTxtEncoding(strc);
+				Code[Length][y] = changeTxtEncoding(strc);
 				y++;
 			}
-			length++;
+			Length++;
 		}
 	}
 }
@@ -422,9 +417,9 @@ void ShowTime(int delay)
 {
 	while (delay != 0)
 	{
-		cout << "\r\u5012\u8ba1\u65f6: ";
+		std::cout << "\r\u5012\u8ba1\u65f6: ";
 		CoutColor(100);
-		cout << setw(2) << setfill('0') << delay / 60 << "\u5206" << setw(2) << setfill('0') << delay % 60 << "\u79d2 ";
+		std::cout << std::setw(2) << std::setfill('0') << delay / 60 << "\u5206" << std::setw(2) << std::setfill('0') << delay % 60 << "\u79d2 ";
 		CoutColor(111);
 		if (delay <= 3 && !IsWindowVisible(gameWhnd))
 		{
@@ -443,10 +438,10 @@ void ShowTime(int delay)
 	}
 }
 //设置窗口标题
-void SetTitle(string path)
+void SetTitle(std::string path)
 {
-	string str1 = path.substr(path.find_last_of('\\') + 1);
-	string str2 = str1.substr(0, str1.find_last_of('.'));
+	std::string str1 = path.substr(path.find_last_of('\\') + 1);
+	std::string str2 = str1.substr(0, str1.find_last_of('.'));
 	LPCSTR title = (LPCSTR)str2.c_str();
 	SetConsoleTitleA(title);
 }
@@ -486,9 +481,9 @@ void GetPosition()
 		{
 			POINT p;
 			GetCursorPos(&p);
-			string str = to_string(p.x) + "," + to_string(p.y);
+			std::string str = std::to_string(p.x) + "," + std::to_string(p.y);
 			char *position = (char *)str.c_str();
-			cout << position << endl;
+			std::cout << position << std::endl;
 			ClipBoard(position);
 		}
 	}
@@ -512,7 +507,7 @@ void GetPosition(int &x, int &y)
 	}
 }
 //获取文档路径
-string GetDocumentsPath()
+std::string GetDocumentsPath()
 {
 	LPITEMIDLIST pidl;
 	LPMALLOC pShellMalloc;
@@ -526,7 +521,7 @@ string GetDocumentsPath()
 		}
 		pShellMalloc->Release();
 	}
-	return string(szDir);
+	return std::string(szDir);
 }
 //游戏全屏截取保存为BDO.BMP
 void ScreenShot()
@@ -543,7 +538,7 @@ void ScreenShot()
 	strFileName += _T("\\Black Desert\\ScreenShot\\");
 	CreateDirectory((LPCTSTR)strFileName, NULL);
 	strFileName += _T("BDO.BMP");
-	m_MyImage.Save(strFileName, ImageFormatPNG);
+	m_MyImage.Save(strFileName, Gdiplus::ImageFormatPNG);
 	m_MyImage.ReleaseDC();
 }
 //快捷键获取坐标RGB颜色，输出显示，复制到剪切板
@@ -553,26 +548,26 @@ void GetXyColor()
 	GetPosition(x, y);
 	ScreenShot();
 	ULONG_PTR gdiplusToken;
-	GdiplusStartupInput gdiplusStartupInput;
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.BMP";
-	Bitmap *image = new Bitmap(Getwstring(imgPath).c_str());
-	Color color1, color2;
+	std::string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.BMP";
+	Gdiplus::Bitmap *image = new Gdiplus::Bitmap(Getwstring(imgPath).c_str());
+	Gdiplus::Color color1, color2;
 	image->GetPixel(x, y, &color1);
 	image->GetPixel(x + 3, y + 3, &color2);
-	string colorStr;
-	colorStr = "color(" + to_string(color1.GetRed()) + "," + to_string(color1.GetGreen()) + "," + to_string(color1.GetBlue()) + ")(";
-	colorStr = colorStr + to_string(color2.GetRed()) + "," + to_string(color2.GetGreen()) + "," + to_string(color2.GetBlue()) + ")";
+	std::string colorStr;
+	colorStr = "color(" + std::to_string(color1.GetRed()) + "," + std::to_string(color1.GetGreen()) + "," + std::to_string(color1.GetBlue()) + ")(";
+	colorStr = colorStr + std::to_string(color2.GetRed()) + "," + std::to_string(color2.GetGreen()) + "," + std::to_string(color2.GetBlue()) + ")";
 	delete image;
-	GdiplusShutdown(gdiplusToken);
+	Gdiplus::GdiplusShutdown(gdiplusToken);
 	char *str = (char *)colorStr.c_str();
-	cout << str << endl;
+	std::cout << str << std::endl;
 	ClipBoard(str);
 }
 //判断某点颜色是否匹配
-bool checkColor(Bitmap *image, int array[], int i, int j)
+bool checkColor(Gdiplus::Bitmap *image, int array[], int i, int j)
 {
-	Color color;
+	Gdiplus::Color color;
 	image->GetPixel(i, j, &color);
 	if (array[0] == color.GetRed() &&
 		array[1] == color.GetGreen() &&
@@ -589,13 +584,13 @@ bool checkColor(Bitmap *image, int array[], int i, int j)
 void getColorXY(int array[][3], int &x, int &y)
 {
 	ULONG_PTR gdiplusToken;
-	GdiplusStartupInput gdiplusStartupInput;
-	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-	string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.BMP";
-	Bitmap *image = new Bitmap(Getwstring(imgPath).c_str());
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+	std::string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.BMP";
+	Gdiplus::Bitmap *image = new Gdiplus::Bitmap(Getwstring(imgPath).c_str());
 	int width = image->GetWidth();
 	int height = image->GetHeight();
-	Color color1, color2;
+	Gdiplus::Color color1, color2;
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
@@ -605,22 +600,22 @@ void getColorXY(int array[][3], int &x, int &y)
 				x = i;
 				y = j;
 				delete image;
-				GdiplusShutdown(gdiplusToken);
+				Gdiplus::GdiplusShutdown(gdiplusToken);
 				return;
 			}
 		}
 	}
 	delete image;
-	GdiplusShutdown(gdiplusToken);
+	Gdiplus::GdiplusShutdown(gdiplusToken);
 }
 //得到坐标
-void GetXY(string &str, int &x, int &y)
+void GetXY(std::string &str, int &x, int &y)
 {
 	//x,y
 	if (str == "x,y")
 	{
 		GetPosition(x, y);
-		str = to_string(x) + ',' + to_string(y);
+		str = std::to_string(x) + ',' + std::to_string(y);
 		Sleep(1000);
 	}
 	//color(255,255,255)(0,0,0)
@@ -628,7 +623,7 @@ void GetXY(string &str, int &x, int &y)
 	{
 		ScreenShot();
 		int colorArray[2][3];
-		string strColor = str;
+		std::string strColor = str;
 		for (int i = 0; i < 2; i++)
 		{
 			strColor = strColor.substr(strColor.find("(") + 1); //r,g,b)(r,g,b)
@@ -649,7 +644,7 @@ void GetXY(string &str, int &x, int &y)
 	}
 }
 //单行脚本处理
-void RunKey(string str[])
+void RunKey(std::string str[])
 {
 	if (IsWindowVisible(gameWhnd))
 	{
@@ -665,7 +660,7 @@ void RunKey(string str[])
 		{
 			int x = 0, y = 0;
 			bool Sign = false;
-			if (str[1].find(',') != string::npos)
+			if (str[1].find(',') != std::string::npos)
 			{
 				GetXY(str[1], x, y);
 				Sign = true;
@@ -729,7 +724,7 @@ int RunFor(int i, int times)
 	int j;
 	while (times--)
 	{
-		for (j = i + 1; Code[j][0] != "END" && Code[j][0] != "\0"; j++)
+		for (j = i + 1; Code[j][0] != "END"; j++)
 		{
 			if (Code[j][0] == "FOR")
 			{
@@ -750,13 +745,13 @@ void RunCode()
 		{
 			system("cls");
 			CoutColor(111);
-			cout << "\u8fd0\u884c\u6b21\u6570: ";
+			std::cout << "\u8fd0\u884c\u6b21\u6570: ";
 			CoutColor(100);
-			cout << num++ << " / " << Getint(Code[0][1]) << endl
-				 << endl;
+			std::cout << num++ << " / " << Getint(Code[0][1]) << std::endl
+					  << std::endl;
 			CoutColor(0);
 			gameWhnd = FindWindow("BlackDesertWindowClass", NULL);
-			for (int i = 0; Code[i][0] != "\0"; i++)
+			for (int i = 0; i < Length; i++)
 			{
 				if (Code[i][0] == "FOR")
 				{
@@ -765,7 +760,7 @@ void RunCode()
 				RunKey(Code[i]);
 			}
 			CoutColor(111);
-			cout << endl;
+			std::cout << std::endl;
 			if (total != 0)
 			{
 				ShowTime(Getint(Code[0][2]));
@@ -783,19 +778,19 @@ int main(int argc, char *argv[])
 		SetTitle(Title);
 		ShowWindow(exeWhnd, 1);
 		CoutColor(111);
-		cout << "\u9009\u62e9\u6267\u884c\u9879\u76ee\uff1a" << endl;
+		std::cout << "\u9009\u62e9\u6267\u884c\u9879\u76ee\uff1a" << std::endl;
 		CoutColor(100);
-		cout << "1\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807" << endl;
-		cout << "2\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807\u5904\u989c\u8272" << endl;
+		std::cout << "1\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807" << std::endl;
+		std::cout << "2\u002e\u83b7\u53d6\u9f20\u6807\u5750\u6807\u5904\u989c\u8272" << std::endl;
 		CoutColor(0);
-		cout << "\u8f93\u5165\uff1a";
+		std::cout << "\u8f93\u5165\uff1a";
 		CoutColor(111);
 		char ch;
 		ch = getchar();
 		ShowWindow(exeWhnd, SW_SHOWMINIMIZED);
 		system("cls");
-		cout << "\u5feb\u6377\u952e\u0020\u005b\u0020\u0041\u004c\u0054\u0020\u002b\u0020\u0060\u0020\u005d" << endl
-			 << endl;
+		std::cout << "\u5feb\u6377\u952e\u0020\u005b\u0020\u0041\u004c\u0054\u0020\u002b\u0020\u0060\u0020\u005d" << std::endl
+				  << std::endl;
 		CoutColor(0);
 		switch (ch)
 		{
@@ -815,7 +810,7 @@ int main(int argc, char *argv[])
 		ReadFiletoCode(argv[1]);
 		if (Code[0][3] != "\0")
 		{
-			thread t(Kill, Code[0][3]);
+			std::thread t(Kill, Code[0][3]);
 			t.detach();
 		}
 		Sleep(1000);
@@ -825,8 +820,8 @@ int main(int argc, char *argv[])
 		SetStyle();
 		SetTitle(Title);
 		ShowWindow(exeWhnd, 1);
-		cout << "QQ: 2797299614" << endl
-			 << endl;
+		std::cout << "QQ: 2797299614" << std::endl
+				  << std::endl;
 	}
 	if (argc != 2)
 		system("pause");
