@@ -1,5 +1,4 @@
-﻿#include <algorithm>
-#include <fstream>
+﻿#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -7,11 +6,10 @@
 #include <atlimage.h>
 #include <gdiplus.h>
 #include <shlobj.h>
-#include <vector>
 #include <windows.h>
 #pragma comment(lib, "Gdiplus.lib")
-#pragma warning(disable : 4267)
 #pragma warning(disable : 4244)
+#pragma warning(disable : 4267)
 #pragma warning(disable : 4996)
 
 HWND exeWhnd = GetConsoleWindow();
@@ -119,8 +117,8 @@ std::wstring Getwstring(std::string str)
 {
 	std::string temp = str;
 	int len = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)temp.c_str(), -1, NULL, 0);
-	wchar_t *wszUtf8 = new wchar_t[len + 1];
-	memset(wszUtf8, 0, len * 2 + 2);
+	wchar_t *wszUtf8 = new wchar_t[len + 1.0];
+	memset(wszUtf8, 0, len * 2.0 + 2);
 	MultiByteToWideChar(CP_ACP, 0, (LPCSTR)temp.c_str(), -1, (LPWSTR)wszUtf8, len);
 	return wszUtf8;
 }
@@ -364,11 +362,11 @@ void CLOSE()
 char *changeTxtEncoding(char *szU8)
 {
 	int wcsLen = MultiByteToWideChar(CP_UTF8, NULL, szU8, strlen(szU8), NULL, 0);
-	wchar_t *wszString = new wchar_t[wcsLen + 1];
+	wchar_t *wszString = new wchar_t[wcsLen + 1.0];
 	MultiByteToWideChar(CP_UTF8, NULL, szU8, strlen(szU8), wszString, wcsLen);
 	wszString[wcsLen] = '\0';
 	int ansiLen = WideCharToMultiByte(CP_ACP, NULL, wszString, wcslen(wszString), NULL, 0, NULL, NULL);
-	char *szAnsi = new char[ansiLen + 1];
+	char *szAnsi = new char[ansiLen + 1.0];
 	WideCharToMultiByte(CP_ACP, NULL, wszString, wcslen(wszString), szAnsi, ansiLen, NULL, NULL);
 	szAnsi[ansiLen] = '\0';
 	return szAnsi;
