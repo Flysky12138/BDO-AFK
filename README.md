@@ -131,14 +131,14 @@ END
 
 ```
 FOR 180
-    K R 10 800
+    K R 800
     FOR 180
-        K R 10 800
-        K Space 10 40
+        K R 800
+        K Space 40
         K2 Alt Q 50 800
     END
     S 800
-    K R 10
+    K R
 END
 ```
 
@@ -150,10 +150,10 @@ END
 BDO 100
 KEY -2 #右键
 OPEN 800
-K I 10 800
+K I 800
 R color(84,163,100)(84,163,124) 800
-K U 10 800
-K I 10 800
+K U 800
+K I 800
 CLOSE
 ```
 

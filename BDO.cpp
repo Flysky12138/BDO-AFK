@@ -327,9 +327,6 @@ void OPEN(int end)
 	headWhnd = GetForegroundWindow();
 	std::cout << "\r\u6253\u5f00" << std::endl;
 	ShowWindow(gameWhnd, 1);
-	//SetForegroundWindow(gameWhnd);
-	//SetActiveWindow(gameWhnd);
-	//SetFocus(gameWhnd);
 	SetWindowPos(gameWhnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	MoveMouse(960, 540);
 	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
@@ -356,6 +353,8 @@ void CLOSE()
 		std::cout << "\r\u5173\u95ed" << std::endl;
 		ShowWindow(gameWhnd, 0);
 		SetForegroundWindow(headWhnd);
+		SetActiveWindow(headWhnd);
+		SetFocus(headWhnd);
 	}
 }
 //转码读取UTF-8文件
