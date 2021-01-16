@@ -749,7 +749,7 @@ void RunCode()
 			CoutColor(111);
 			std::cout << "\u8fd0\u884c\u6b21\u6570: ";
 			CoutColor(100);
-			std::cout << num++ << " / " << Getint(Code[0][1]) << std::endl
+			std::cout << num++ << " · " << Getint(Code[0][1]) << std::endl
 					  << std::endl;
 			CoutColor(0);
 			gameWhnd = FindWindow("BlackDesertWindowClass", NULL);
