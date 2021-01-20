@@ -713,22 +713,32 @@ void RunKey(std::string str[])
 		{
 			S(Getint(str[1]));
 		}
-		if (str[0] == "KU")
-		{
-			KU(str[1]);
-		}
-		if (str[0] == "KD")
-		{
-			KD(str[1]);
-		}
 		if (str[0] == "CV")
 		{
 			CV(str[1], Getint(str[2]));
+		}
+		if (str[0] == "WHILE")
+		{
+			int x = 0, y = 0;
+			do
+			{
+				GetXY(str[1], x, y);
+				Sleep(200);
+			} while (x == 0 && y == 0);
+			Sleep(Getint(str[2]));
 		}
 		if (str[0] == "CLOSE")
 		{
 			CLOSE();
 		}
+	}
+	if (str[0] == "KU")
+	{
+		KU(str[1]);
+	}
+	if (str[0] == "KD")
+	{
+		KD(str[1]);
 	}
 	if (str[0] == "OPEN")
 	{
