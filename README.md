@@ -112,7 +112,7 @@ CV "AAAA" 800
 -   `key`：可填按键 `0-9` `A-Z` `F1-F10` `Esc` `Tab` `Enter` `Ctrl` `LShift` `RShift` `Alt` `Space` `Scroll` `End` `Down` `PgDn` `Insert` `Delete` `PrtSc` `Caps` `Num` `Home` `Up` `PgUp` `Bs` `Left` `Center` `Right` `-` `=` `[` `]` `;` `'` `` ` `` `\` `,` `.` `/` `/-` `/+`
 -   `keyUp_delay(ms)`：按键按下到抬起之间的时间
 -   `x,y`：可以填写坐标如 `100,200`，也可以直接填写 `x,y`。当填写 `x,y` 时，程序第一次运行到这行代码时，你需要按快捷键 `` ALT+` `` 获取坐标，之后的运行就自动使用这次得到的坐标
--   `color(r,g,b)(r,g,b)`：获取图片 `BDO.BMP`（自动截取的图片，保存在游戏截图文件夹内）中第一个满足条件的颜色的坐标（两点是 3 像素矩形左上与右下的顶点，匹配成功后取左上角一点为匹配到的坐标）
+-   `color(r,g,b)(r,g,b)`：获取屏幕中第一个满足条件的颜色的坐标（两点是 3 像素矩形左上与右下的顶点，匹配成功后取左上角一点为匹配到的坐标）
 -   `downMove_times`：向下移动，以一个背包格子为单位
 
 > 单行命令最后为 `0` 时可不填写
@@ -148,7 +148,7 @@ END
 
 ```
 BDO 100
-KEY -2 #右键
+KD -2 #右键
 OPEN 800
 K I 800
 R color(84,163,100)(84,163,124) 800
@@ -168,9 +168,9 @@ KERNEL32.dll
 USER32.dll
 GDI32.dll
 SHELL32.dll
+gdiplus.dll
 MSVCP140.dll
 SHLWAPI.dll
-gdiplus.dll
 VCRUNTIME140_1.dll
 VCRUNTIME140.dll
 api-ms-win-crt-runtime-l1-1-0.dll

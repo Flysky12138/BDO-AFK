@@ -12,6 +12,7 @@
 #pragma warning(disable : 4267)
 #pragma warning(disable : 4996)
 
+CImage m_MyImage;
 HWND exeWhnd = GetConsoleWindow();
 HWND gameWhnd, headWhnd;
 int QuickKey = VK_OEM_3;
@@ -490,7 +491,7 @@ void GetPosition()
 		}
 	}
 }
-//快捷键获取鼠标坐标
+//快捷键获取坐标
 void GetPosition(int &x, int &y)
 {
 	int hotkey = 1000;
@@ -508,59 +509,63 @@ void GetPosition(int &x, int &y)
 		}
 	}
 }
-//获取文档路径
-std::string GetDocumentsPath()
+//CImage转Gdiplus::Bitmap
+Gdiplus::Bitmap *CImage2Image(CImage *pImage)
 {
-	LPITEMIDLIST pidl;
-	LPMALLOC pShellMalloc;
-	char szDir[200];
-	if (SUCCEEDED(SHGetMalloc(&pShellMalloc)))
+	Gdiplus::Bitmap *image = new Gdiplus::Bitmap(pImage->GetWidth(), pImage->GetHeight());
+	Gdiplus::Rect bound(0, 0, pImage->GetWidth(), pImage->GetHeight());
+	Gdiplus::BitmapData lockedBitmapData;
+	int bpp = pImage->GetBPP();
+	int imageRowSize = pImage->GetWidth() * (bpp / 8);
+	if (bpp == 24)
 	{
-		if (SUCCEEDED(SHGetSpecialFolderLocation(NULL, CSIDL_PERSONAL, &pidl)))
-		{
-			SHGetPathFromIDListA(pidl, szDir);
-			pShellMalloc->Free(pidl);
-		}
-		pShellMalloc->Release();
+		image->LockBits(&bound, Gdiplus::ImageLockModeWrite, PixelFormat24bppRGB, &lockedBitmapData);
 	}
-	return std::string(szDir);
+	else if (bpp == 32)
+	{
+		image->LockBits(&bound, Gdiplus::ImageLockModeWrite, PixelFormat32bppARGB, &lockedBitmapData);
+	}
+	BYTE *pSrcPointer = (BYTE *)pImage->GetBits();
+	BYTE *pDstPointer = (BYTE *)lockedBitmapData.Scan0;
+	for (int i = 0; i < pImage->GetHeight(); i++)
+	{
+		memcpy(pDstPointer, pSrcPointer, imageRowSize);
+		pSrcPointer += pImage->GetPitch();
+		pDstPointer += lockedBitmapData.Stride;
+	}
+	image->UnlockBits(&lockedBitmapData);
+	return image;
 }
-//游戏全屏截取保存为BDO.BMP
-void ScreenShot()
+//全屏截取
+Gdiplus::Bitmap *ScreenShot()
 {
 	HDC hDCScreen = GetDC(NULL);
 	int nBitPerPixel = GetDeviceCaps(hDCScreen, BITSPIXEL);
 	int nWidthScreen = GetDeviceCaps(hDCScreen, HORZRES);
 	int nHeightScreen = GetDeviceCaps(hDCScreen, VERTRES);
-	CImage m_MyImage;
 	m_MyImage.Create(nWidthScreen, nHeightScreen, nBitPerPixel);
 	HDC hDCImg = m_MyImage.GetDC();
 	BitBlt(hDCImg, 0, 0, nWidthScreen, nHeightScreen, hDCScreen, 0, 0, SRCCOPY);
-	CString strFileName = GetDocumentsPath().c_str();
-	strFileName += _T("\\Black Desert\\ScreenShot\\");
-	CreateDirectory((LPCTSTR)strFileName, NULL);
-	strFileName += _T("BDO.BMP");
-	m_MyImage.Save(strFileName, Gdiplus::ImageFormatPNG);
+	// m_MyImage.Save("C:/BDO.PNG", Gdiplus::ImageFormatPNG);
+	Gdiplus::Bitmap *image = CImage2Image(&m_MyImage);
 	m_MyImage.ReleaseDC();
+	return image;
 }
 //快捷键获取坐标RGB颜色，输出显示，复制到剪切板
 void GetXyColor()
 {
 	int x = 0, y = 0;
 	GetPosition(x, y);
-	ScreenShot();
 	ULONG_PTR gdiplusToken;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-	std::string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.BMP";
-	Gdiplus::Bitmap *image = new Gdiplus::Bitmap(Getwstring(imgPath).c_str());
+	Gdiplus::Bitmap *image = ScreenShot();
 	Gdiplus::Color color1, color2;
 	image->GetPixel(x, y, &color1);
 	image->GetPixel(x + 3, y + 3, &color2);
 	std::string colorStr;
 	colorStr = "color(" + std::to_string(color1.GetRed()) + "," + std::to_string(color1.GetGreen()) + "," + std::to_string(color1.GetBlue()) + ")(";
 	colorStr = colorStr + std::to_string(color2.GetRed()) + "," + std::to_string(color2.GetGreen()) + "," + std::to_string(color2.GetBlue()) + ")";
-	delete image;
 	Gdiplus::GdiplusShutdown(gdiplusToken);
 	char *str = (char *)colorStr.c_str();
 	std::cout << str << std::endl;
@@ -588,8 +593,7 @@ void getColorXY(int array[][3], int &x, int &y)
 	ULONG_PTR gdiplusToken;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-	std::string imgPath = GetDocumentsPath() + "\\Black Desert\\ScreenShot\\BDO.BMP";
-	Gdiplus::Bitmap *image = new Gdiplus::Bitmap(Getwstring(imgPath).c_str());
+	Gdiplus::Bitmap *image = ScreenShot();
 	int width = image->GetWidth();
 	int height = image->GetHeight();
 	Gdiplus::Color color1, color2;
@@ -601,13 +605,11 @@ void getColorXY(int array[][3], int &x, int &y)
 			{
 				x = i;
 				y = j;
-				delete image;
 				Gdiplus::GdiplusShutdown(gdiplusToken);
 				return;
 			}
 		}
 	}
-	delete image;
 	Gdiplus::GdiplusShutdown(gdiplusToken);
 }
 //得到坐标
@@ -623,7 +625,6 @@ void GetXY(std::string &str, int &x, int &y)
 	//color(255,255,255)(0,0,0)
 	else if (str.substr(0, 5) == "color")
 	{
-		ScreenShot();
 		int colorArray[2][3];
 		std::string strColor = str;
 		for (int i = 0; i < 2; i++)
@@ -658,29 +659,43 @@ void RunKey(std::string str[])
 		{
 			K2(str[1], str[2], Getint(str[3]), Getint(str[4]));
 		}
-		if (str[0] == "L" || str[0] == "R" || str[0] == "W")
+		if (str[0] == "L" || str[0] == "R")
 		{
-			int x = 0, y = 0;
-			bool Sign = false;
 			if (str[1].find(',') != std::string::npos)
 			{
+				int x = 0, y = 0;
 				GetXY(str[1], x, y);
-				Sign = true;
+				if (x != 0 && y != 0)
+				{
+					if (str[0] == "L")
+					{
+						L(x, y, Getint(str[2]));
+					}
+					if (str[0] == "R")
+					{
+						R(x, y, Getint(str[2]));
+					}
+				}
 			}
-			if (!Sign || (x != 0 && y != 0))
+			else
 			{
 				if (str[0] == "L")
 				{
-					Sign ? L(x, y, Getint(str[2])) : L(Getint(str[1]), Getint(str[2]));
+					L(Getint(str[1]), Getint(str[2]));
 				}
 				if (str[0] == "R")
 				{
-					Sign ? R(x, y, Getint(str[2])) : R(Getint(str[1]), Getint(str[2]));
+					R(Getint(str[1]), Getint(str[2]));
 				}
-				if (str[0] == "W")
-				{
-					W(x, y, Getint(str[2]), Getint(str[3]));
-				}
+			}
+		}
+		if (str[0] == "W")
+		{
+			int x = 0, y = 0;
+			GetXY(str[1], x, y);
+			if (x != 0 && y != 0)
+			{
+				W(x, y, Getint(str[2]), Getint(str[3]));
 			}
 		}
 		if (str[0] == "M")
@@ -698,26 +713,26 @@ void RunKey(std::string str[])
 		{
 			S(Getint(str[1]));
 		}
-	}
-	if (str[0] == "KU")
-	{
-		KU(str[1]);
-	}
-	if (str[0] == "KD")
-	{
-		KD(str[1]);
-	}
-	if (str[0] == "CV")
-	{
-		CV(str[1], Getint(str[2]));
+		if (str[0] == "KU")
+		{
+			KU(str[1]);
+		}
+		if (str[0] == "KD")
+		{
+			KD(str[1]);
+		}
+		if (str[0] == "CV")
+		{
+			CV(str[1], Getint(str[2]));
+		}
+		if (str[0] == "CLOSE")
+		{
+			CLOSE();
+		}
 	}
 	if (str[0] == "OPEN")
 	{
 		OPEN(Getint(str[1]));
-	}
-	if (str[0] == "CLOSE")
-	{
-		CLOSE();
 	}
 }
 //FOR循环
