@@ -333,7 +333,6 @@ void OPEN(int end)
 	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 	Sleep(50);
 	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-	SetWindowPos(gameWhnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	if (end < 0)
 	{
 		end = -end;
@@ -352,6 +351,7 @@ void CLOSE()
 	if (IsWindowVisible(gameWhnd))
 	{
 		std::cout << "\r\u5173\u95ed" << std::endl;
+		SetWindowPos(gameWhnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 		ShowWindow(gameWhnd, 0);
 		SetForegroundWindow(headWhnd);
 		SetActiveWindow(headWhnd);
@@ -646,8 +646,55 @@ void GetXY(std::string &str, int &x, int &y)
 		y = Getint(str.substr(1 + division));
 	}
 }
+//FOR循环
+int RunKey(std::string[], int);
+int RunFor(int line)
+{
+	int j, times = Getint(Code[line][1]);
+	while (times--)
+	{
+		j = line + 1;
+		while (Code[j][0] != "END")
+		{
+			j = RunKey(Code[j], j);
+		}
+	}
+	return j;
+}
+//IF判断
+int RunIf(int line)
+{
+	int j = line + 1;
+	int x = 0, y = 0;
+	GetXY(Code[line][1], x, y);
+	if (x != 0 && y != 0)
+	{
+		while (Code[j][0] != "FI")
+		{
+			j = RunKey(Code[j], j);
+		}
+	}
+	else
+	{
+		int k = 1; //记录FI数,含嵌套情况
+		while (k != 0)
+		{
+			if (Code[j][0] == "IF")
+			{
+				k++;
+			}
+			else if (Code[j][0] == "FI")
+			{
+				k--;
+			}
+			j++;
+		}
+		j--; //定位到FI那一行
+	}
+	return j;
+}
 //单行脚本处理
-void RunKey(std::string str[])
+int RunKey(std::string str[], int line)
 {
 	if (gameWhnd == GetForegroundWindow())
 	{
@@ -732,6 +779,14 @@ void RunKey(std::string str[])
 			CLOSE();
 		}
 	}
+	if (str[0] == "FOR")
+	{
+		line = RunFor(line);
+	}
+	if (str[0] == "IF")
+	{
+		line = RunIf(line);
+	}
 	if (str[0] == "KU")
 	{
 		KU(str[1]);
@@ -744,54 +799,42 @@ void RunKey(std::string str[])
 	{
 		OPEN(Getint(str[1]));
 	}
-}
-//FOR循环
-int RunFor(int i, int times)
-{
-	int j;
-	while (times--)
-	{
-		for (j = i + 1; Code[j][0] != "END"; j++)
-		{
-			if (Code[j][0] == "FOR")
-			{
-				j = RunFor(j, Getint(Code[j][1]));
-			}
-			RunKey(Code[j]);
-		}
-	}
-	return j;
+	return line + 1;
 }
 //脚本整体处理
 void RunCode()
 {
-	if (Code[0][0] == "BDO")
+	int startLine = 0, num = 1;
+	while (Code[startLine][0] != "BDO")
 	{
-		int num = 1, total = Getint(Code[0][1]);
-		while (total--)
+		startLine++;
+	}
+	if (Code[startLine][3] != "\0")
+	{
+		std::thread t(Kill, Code[startLine][3]);
+		t.detach();
+	}
+	int total = Getint(Code[startLine][1]), time = Getint(Code[startLine][2]);
+	while (total--)
+	{
+		gameWhnd = FindWindow("BlackDesertWindowClass", NULL);
+		system("cls");
+		CoutColor(111);
+		std::cout << "\u8fd0\u884c\u6b21\u6570: ";
+		CoutColor(100);
+		std::cout << num++ << " · " << Getint(Code[startLine][1]) << std::endl
+				  << std::endl;
+		CoutColor(0);
+		int i = startLine + 1;
+		while (i < Length)
 		{
-			system("cls");
-			CoutColor(111);
-			std::cout << "\u8fd0\u884c\u6b21\u6570: ";
-			CoutColor(100);
-			std::cout << num++ << " · " << Getint(Code[0][1]) << std::endl
-					  << std::endl;
-			CoutColor(0);
-			gameWhnd = FindWindow("BlackDesertWindowClass", NULL);
-			for (int i = 0; i < Length; i++)
-			{
-				if (Code[i][0] == "FOR")
-				{
-					i = RunFor(i, Getint(Code[i][1]));
-				}
-				RunKey(Code[i]);
-			}
-			CoutColor(111);
-			std::cout << std::endl;
-			if (total != 0)
-			{
-				ShowTime(Getint(Code[0][2]));
-			}
+			i = RunKey(Code[i], i);
+		}
+		CoutColor(111);
+		std::cout << std::endl;
+		if (total != 0)
+		{
+			ShowTime(time);
 		}
 	}
 }
@@ -835,11 +878,6 @@ int main(int argc, char *argv[])
 		SetStyle();
 		SetTitle(argv[1]);
 		ReadFiletoCode(argv[1]);
-		if (Code[0][3] != "\0")
-		{
-			std::thread t(Kill, Code[0][3]);
-			t.detach();
-		}
 		Sleep(1000);
 		RunCode();
 		break;
