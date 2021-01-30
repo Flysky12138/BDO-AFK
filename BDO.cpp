@@ -457,6 +457,7 @@ void SetStyle()
 		exeWhnd,
 		GWL_STYLE,
 		GetWindowLongPtrA(exeWhnd, GWL_STYLE) & ~WS_SIZEBOX & ~WS_MAXIMIZEBOX);
+	Sleep(50);
 	ShowWindow(exeWhnd, SW_SHOWMINIMIZED);
 }
 //str复制到剪切板
@@ -822,7 +823,7 @@ void RunCode()
 		CoutColor(111);
 		std::cout << "\u8fd0\u884c\u6b21\u6570: ";
 		CoutColor(100);
-		std::cout << num++ << " · " << Getint(Code[startLine][1]) << std::endl
+		std::cout << num++ << "/" << Getint(Code[startLine][1]) << "  " << Code[startLine][3] << std::endl
 				  << std::endl;
 		CoutColor(0);
 		int i = startLine + 1;
@@ -881,12 +882,6 @@ int main(int argc, char *argv[])
 		Sleep(1000);
 		RunCode();
 		break;
-	default:
-		SetStyle();
-		SetTitle(Title);
-		ShowWindow(exeWhnd, 1);
-		std::cout << "QQ: 2797299614" << std::endl
-				  << std::endl;
 	}
 	if (argc != 2)
 		system("pause");
