@@ -109,8 +109,8 @@ CV "AAAA" 800
 11. 等待找到坐标后才继续执行
 
 ```
-WHILE <color(r,g,b)(r,g,b)> [wait(ms)]
-WHILE color(144,142,144)(132,128,129) 300
+WHILE <color(r,g,b)(r,g,b)>
+WHILE color(144,142,144)(132,128,129)
 ```
 
 -   `run_times`：运行次数
@@ -138,9 +138,9 @@ FI
 
 ```
 IF color(93,67,121)(93,68,120)
-	K I 100
+    K I 100
     IF color(93,67,121)(93,68,120)
-	    K I 100
+        K I 100
     FI
 FI
 ```
@@ -177,7 +177,7 @@ BDO 1000 160 End
 OPEN -800
 K 1 3000
 FOR 80
-	K R 500
+    K R 500
 END
 K Tab 800
 CLOSE

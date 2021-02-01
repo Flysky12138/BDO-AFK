@@ -773,7 +773,6 @@ int RunKey(std::string str[], int line)
 				GetXY(str[1], x, y);
 				Sleep(200);
 			} while (x == 0 && y == 0);
-			Sleep(Getint(str[2]));
 		}
 		if (str[0] == "CLOSE")
 		{
