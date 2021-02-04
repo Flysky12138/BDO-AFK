@@ -113,7 +113,7 @@ WHILE <color(r,g,b)(r,g,b)>
 WHILE color(144,142,144)(132,128,129)
 ```
 
--   `run_times`：运行次数
+-   `run_times`：运行次数 `0` 为无限次
 -   `runEnd_wait(s)`：单次脚本运行完后的等待时间，当倒计时到达 `3` 秒内且游戏最小化时将弹出窗口，`0` 秒时再隐藏
 -   `wait(ms)`：运行单行命令后的等待时间
 -   `key`：可填按键 `0-9` `A-Z` `F1-F10` `Esc` `Tab` `Enter` `Ctrl` `LShift` `RShift` `Alt` `Space` `Scroll` `End` `Down` `PgDn` `Insert` `Delete` `PrtSc` `Caps` `Num` `Home` `Up` `PgUp` `Bs` `Left` `Center` `Right` `-` `=` `[` `]` `;` `'` `` ` `` `\` `,` `.` `/` `/-` `/+`

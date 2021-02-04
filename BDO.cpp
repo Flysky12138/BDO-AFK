@@ -329,6 +329,7 @@ void OPEN(int end)
 	std::cout << "\r\u6253\u5f00" << std::endl;
 	ShowWindow(gameWhnd, 1);
 	SetWindowPos(gameWhnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+	Sleep(50);
 	MoveMouse(960, 540);
 	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 	Sleep(50);
@@ -815,6 +816,7 @@ void RunCode()
 		t.detach();
 	}
 	int total = Getint(Code[startLine][1]), time = Getint(Code[startLine][2]);
+	total = total == 0 ? 1 : total;
 	while (total--)
 	{
 		gameWhnd = FindWindow("BlackDesertWindowClass", NULL);
@@ -822,8 +824,17 @@ void RunCode()
 		CoutColor(111);
 		std::cout << "\u8fd0\u884c\u6b21\u6570: ";
 		CoutColor(100);
-		std::cout << num++ << "/" << Getint(Code[startLine][1]) << "  " << Code[startLine][3] << std::endl
-				  << std::endl;
+		if (Getint(Code[startLine][1]) == 0)
+		{
+			std::cout << "∞";
+			total++;
+		}
+		else
+		{
+			std::cout << num++ << "/" << Getint(Code[startLine][1]);
+		}
+		std::cout << "  " << Code[startLine][3] << std::endl;
+		std::cout << std::endl;
 		CoutColor(0);
 		int i = startLine + 1;
 		while (i < Length)
