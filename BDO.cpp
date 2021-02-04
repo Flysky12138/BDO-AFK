@@ -816,7 +816,6 @@ void RunCode()
 		t.detach();
 	}
 	int total = Getint(Code[startLine][1]), time = Getint(Code[startLine][2]);
-	total = total == 0 ? 1 : total;
 	while (total--)
 	{
 		gameWhnd = FindWindow("BlackDesertWindowClass", NULL);
@@ -824,15 +823,7 @@ void RunCode()
 		CoutColor(111);
 		std::cout << "\u8fd0\u884c\u6b21\u6570: ";
 		CoutColor(100);
-		if (Getint(Code[startLine][1]) == 0)
-		{
-			std::cout << "∞";
-			total++;
-		}
-		else
-		{
-			std::cout << num++ << "/" << Getint(Code[startLine][1]);
-		}
+		std::cout << num++ << "/" << Getint(Code[startLine][1]);
 		std::cout << "  " << Code[startLine][3] << std::endl;
 		std::cout << std::endl;
 		CoutColor(0);
