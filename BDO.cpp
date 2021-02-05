@@ -12,7 +12,6 @@
 #pragma warning(disable : 4267)
 #pragma warning(disable : 4996)
 
-CImage m_MyImage;
 HWND exeWhnd = GetConsoleWindow();
 HWND gameWhnd, headWhnd;
 int QuickKey = VK_OEM_3;
@@ -545,6 +544,7 @@ Gdiplus::Bitmap *ScreenShot()
 	int nBitPerPixel = GetDeviceCaps(hDCScreen, BITSPIXEL);
 	int nWidthScreen = GetDeviceCaps(hDCScreen, HORZRES);
 	int nHeightScreen = GetDeviceCaps(hDCScreen, VERTRES);
+	CImage m_MyImage;
 	m_MyImage.Create(nWidthScreen, nHeightScreen, nBitPerPixel);
 	HDC hDCImg = m_MyImage.GetDC();
 	BitBlt(hDCImg, 0, 0, nWidthScreen, nHeightScreen, hDCScreen, 0, 0, SRCCOPY);
